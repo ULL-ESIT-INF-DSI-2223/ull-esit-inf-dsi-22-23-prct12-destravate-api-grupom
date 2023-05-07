@@ -72,66 +72,100 @@ userRouter.get('/users/:username', async (req, res) => {
   }
 });
 
+/////////////////////////////////// PATCH  ///////////////////////////////////////
+
+userRouter.patch("/users/:username", async (req, res) => {
+  try {
+    const allowedUpdates = ["name", "activity", "friends", "friendsGroups", "trainingStats", "favoriteTracks", "favoriteChallenges", "history"];
+    const actualUpdates = Object.keys(req.body);
+    const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
+
+    if (!isValidUpdate) {
+      return res.status(400).send({
+        error: "Los parámetros seleccionados no se puede modificar",
+      });
+    }
+
+    const user = await User.findOneAndUpdate(
+      {
+        username: req.params.username,
+      },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    )
+    // TODO : revisar el populate
+    if (user) {
+      return res.send(user);
+    }
+    return res.status(404).send();
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+});
+
 
 /////////////////////////////////// DELETE  ///////////////////////////////////////
 
-userRouter.delete('/users', async (req, res) => {
-  if (!req.query.username) {
-    return res.status(400).send({
-      error: 'A username must be provided',
-    });
-  }
+// userRouter.delete('/users', async (req, res) => {
+//   if (!req.query.username) {
+//     return res.status(400).send({
+//       error: 'A username must be provided',
+//     });
+//   }
 
-  try {
-    const user = await User.findOne({
-      username: req.query.username.toString()
-    });
+//   try {
+//     const user = await User.findOne({
+//       username: req.query.username.toString()
+//     });
 
-    if (!user) {
-      return res.status(404).send();
-    }
+//     if (!user) {
+//       return res.status(404).send();
+//     }
 
-    // TODO : darse cuenta del borrado en cascada
-    // const result = await Note.deleteMany({owner: user._id});
+//     // TODO : darse cuenta del borrado en cascada
+//     // const result = await Note.deleteMany({owner: user._id});
 
-    // if (!result.acknowledged) {
-    //   return res.status(500).send();
-    // }
+//     // if (!result.acknowledged) {
+//     //   return res.status(500).send();
+//     // }
 
-    await User.findByIdAndDelete(user._id);
-    return res.send(user);
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-});
+//     await User.findByIdAndDelete(user._id);
+//     return res.send(user);
+//   } catch (error) {
+//     return res.status(500).send(error);
+//   }
+// });
 
 
-userRouter.delete('/users/:username', async (req, res) => {
-  if (!req.params.username) {
-    return res.status(400).send({
-      error: 'A username must be provided',
-    });
-  }
+// userRouter.delete('/users/:username', async (req, res) => {
+//   if (!req.params.username) {
+//     return res.status(400).send({
+//       error: 'A username must be provided',
+//     });
+//   }
 
-  try {
-    const user = await User.findOne({
-      username: req.params.username.toString()
-    });
+//   try {
+//     const user = await User.findOne({
+//       username: req.params.username.toString()
+//     });
 
-    if (!user) {
-      return res.status(404).send();
-    }
+//     if (!user) {
+//       return res.status(404).send();
+//     }
 
-    // TODO : darse cuenta del borrado en cascada
-    // const result = await Note.deleteMany({owner: user._id});
+//     // TODO : darse cuenta del borrado en cascada
+//     // const result = await Note.deleteMany({owner: user._id});
 
-    // if (!result.acknowledged) {
-    //   return res.status(500).send();
-    // }
+//     // if (!result.acknowledged) {
+//     //   return res.status(500).send();
+//     // }
 
-    await User.findByIdAndDelete(user._id);
-    return res.send(user);
-  } catch (error) {
-    return res.status(500).send(error);
-  }
-});
+//     await User.findByIdAndDelete(user._id);
+//     return res.send(user);
+//   } catch (error) {
+//     return res.status(500).send(error);
+//   }
+// });

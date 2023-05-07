@@ -6,11 +6,11 @@ import validator from 'validator';
 export interface GroupDocumentInterface extends Document {
   id: number;
   name: string;
-  participants:  Schema.Types.ObjectId[];
-  groupTrainingStats: UserStats;
+  participants?:  Schema.Types.ObjectId[];
+  groupTrainingStats?: UserStats;
   groupRanking: Schema.Types.ObjectId[];
-  groupFavoriteTracks: Schema.Types.ObjectId[];
-  groupHistoricalTracks: Map<string, Schema.Types.ObjectId[]>;
+  groupFavoriteTracks?: Schema.Types.ObjectId[];
+  groupHistoricalTracks?: Map<string, Schema.Types.ObjectId[]>;
 }
 
 

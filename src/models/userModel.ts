@@ -8,11 +8,11 @@ export interface UserDocumentInterface extends Document {
   name: string;
   activity: 'Correr' | 'Bicicleta';
   friends?: Schema.Types.ObjectId[];
-  friendsGroups: Schema.Types.ObjectId[];
-  trainingStats: UserStats;
+  friendsGroups?: Schema.Types.ObjectId[];
+  trainingStats?: UserStats;
   favoriteTracks?: Schema.Types.ObjectId[];
   favoriteChallenges?: Schema.Types.ObjectId[];
-  history: Map<string, Schema.Types.ObjectId[]>;
+  history?: Map<string, Schema.Types.ObjectId[]>;
 }
 
 

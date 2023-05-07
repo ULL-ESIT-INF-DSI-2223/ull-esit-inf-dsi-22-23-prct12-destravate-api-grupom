@@ -10,9 +10,9 @@ export interface TrackDocumentInterface extends Document {
   endGeolocation: Coordinates,
   distance: number,
   unevenness: number,
-  users: Schema.Types.ObjectId[],
+  users?: Schema.Types.ObjectId[],
   activity: 'Bicicleta' | 'Correr',
-  averageRating: number
+  averageRating?: number
 }
 
 
