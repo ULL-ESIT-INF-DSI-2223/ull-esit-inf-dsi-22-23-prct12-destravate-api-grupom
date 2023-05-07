@@ -13,7 +13,7 @@ userRouter.post('/users', async (req, res) => {
     await user.save();
     return res.status(201).send(user);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "No se añadió correctamente el usuario", error: error});
   }
 
 });

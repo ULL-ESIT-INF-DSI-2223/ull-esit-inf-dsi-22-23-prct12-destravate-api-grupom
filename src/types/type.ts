@@ -1,4 +1,6 @@
 
-export type UnevennessDistance = [distancia: number, desnivel: number];
+export type UnevennessDistance = [unevenness: number, distance: number];
 
-export type UserStatistics = [semana: UnevennessDistance, mes: UnevennessDistance, anio: UnevennessDistance];
+export type UserStats = [week: UnevennessDistance, month: UnevennessDistance, year: UnevennessDistance];
+
+export type Coordinates = [latitude: number, length: number];
