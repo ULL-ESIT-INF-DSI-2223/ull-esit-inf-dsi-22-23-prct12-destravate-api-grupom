@@ -1,11 +1,13 @@
 {
-  "name": "ull-esit-inf-dsi-22-23-prct09-funko-app-DanielFelipeGomez",
+  "name": "Practica12",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "tsc-watch --onSuccess \"node dist/index.js\"",
+    "server": "tsc-watch --onSuccess \"node dist/server.js\"",
+    "mongoose": "tsc-watch --onSuccess \"node dist/db/mongoose.js\"",
     "tsx": "tsc --outDir dist",
     "doc": "typedoc",
     "test": "mocha",

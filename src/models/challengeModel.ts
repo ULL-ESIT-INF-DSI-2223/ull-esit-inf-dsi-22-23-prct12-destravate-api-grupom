@@ -1,5 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 import validator from "validator";
+import { UsersExist, TracksExist } from '../tools/tools.js';
+
 
 export interface ChallengeDocumentInterface extends Document {
   id: number;
@@ -33,6 +35,11 @@ const ChallengeSchema = new Schema<ChallengeDocumentInterface>({
     type: [Schema.Types.ObjectId],
     required: true,
     ref: "Track",
+    validate: async (value: Schema.Types.ObjectId[]) => {
+      for (const id of value) {
+        await TracksExist(id);
+      }
+    }
   },
   activity: {
     type: String,
@@ -47,6 +54,11 @@ const ChallengeSchema = new Schema<ChallengeDocumentInterface>({
     type: [Schema.Types.ObjectId],
     default: [],
     ref: "User",
+    validate: async (value: Schema.Types.ObjectId[]) => {
+      for (const id of value) {
+        await UsersExist(id);
+      }
+    }
   },
 });
 

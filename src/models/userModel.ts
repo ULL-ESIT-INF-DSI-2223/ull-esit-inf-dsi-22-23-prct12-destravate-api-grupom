@@ -1,6 +1,8 @@
 import { Document, Schema, model } from 'mongoose';
 import { UserStats } from '../types/type.js';
 import validator from 'validator';
+import { UsersExist, GroupsExist, TracksExist, ChallengesExist } from '../tools/tools.js';
+
 
 
 export interface UserDocumentInterface extends Document {
@@ -43,11 +45,21 @@ const UserSchema = new Schema<UserDocumentInterface>({
     type: [Schema.Types.ObjectId],
     ref: 'User',
     default: [],
+    validate: async (value: Schema.Types.ObjectId[]) => {
+      for (const id of value) {
+        await UsersExist(id);
+      }
+    }
   },
   friendsGroups: {
     type: [Schema.Types.ObjectId],
     ref: 'Group',
     default: [],
+    validate: async (value: Schema.Types.ObjectId[]) => {
+      for (const id of value) {
+        await GroupsExist(id);
+      }
+    }
   },
   trainingStats: {
     type: [[Number]],
@@ -65,11 +77,21 @@ const UserSchema = new Schema<UserDocumentInterface>({
     type: [Schema.Types.ObjectId],
     default: [],
     ref: 'Tracks',
+    validate: async (value: Schema.Types.ObjectId[]) => {
+      for (const id of value) {
+        await TracksExist(id);
+      }
+    }
   },
   favoriteChallenges: {
     type: [Schema.Types.ObjectId],
     default: [],
     ref: 'Challenge',
+    validate: async (value: Schema.Types.ObjectId[]) => {
+      for (const id of value) {
+        await ChallengesExist(id);
+      }
+    }
   },
   history: {
     type: Map,
@@ -79,13 +101,24 @@ const UserSchema = new Schema<UserDocumentInterface>({
       ref: 'Track',
     },
     // TODO : comprobar que el formato de la fecha introducida es correcto
-    validate: (value: Map<string, Schema.Types.ObjectId[]>) => {
-      for (let key in value.keys()) {
-        if(!validator.default.isDate(key)) {
-          throw new Error('El formato de la fecha no es correcto');
+    validate: [{
+      validator: async (value: Map<string, Schema.Types.ObjectId[]>) => {
+        for (let key in value.keys()) {
+          if(!validator.default.isDate(key)) {
+            throw new Error('El formato de la fecha no es correcto');
+          }
         }
-      }
-    }
+      }, 
+    },
+    {
+      validator: async (mapa: Map<string, Schema.Types.ObjectId[]>) => {
+        for (const value of mapa.values()) {
+          for (const id of value) {
+            await TracksExist(id);
+          }
+        }
+      },
+    }]
   }
 });
 

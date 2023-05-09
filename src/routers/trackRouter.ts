@@ -1,20 +1,22 @@
 import express from "express";
 import { Track } from "../models/trackModel.js";
 import { Challenge } from "../models/challengeModel.js";
+import { User } from "../models/userModel.js";
+import { Schema } from "mongoose";
+
 
 export const trackRouter = express.Router();
 
 /////////////////////////////////// POST  ///////////////////////////////////////
 
 trackRouter.post("/tracks", async (req, res) => {
-  const track = new Track(req.body);
-
   try {
+    const track = new Track(req.body);
     await track.save();
     return res.status(201).send(track);
   } catch (error) {
     return res.status(500).send(error);
-  }
+  }    
 });
 
 /////////////////////////////////// GET  ///////////////////////////////////////
@@ -35,9 +37,9 @@ trackRouter.get("/tracks", async (req, res) => {
 });
 
 trackRouter.get("/tracks/:id", async (req, res) => {
-  const filter = req.params.id ? { id: req.params.id.toString() } : {};
-
   try {
+    const filter = req.params.id ? { id: req.params.id.toString() } : {};
+
     const tracks = await Track.find(filter);
 
     if (tracks.length !== 0) {
@@ -54,26 +56,15 @@ trackRouter.get("/tracks/:id", async (req, res) => {
 
 trackRouter.patch("/tracks/:id", async (req, res) => {
   try {
-    const allowedUpdates = ["name", "startGeolocation", "endGeolocation", "distance", "unevenness", "users", "activity", "averageRating"];
+    const allowedUpdates = ["name", "startGeolocation", "endGeolocation", "distance", "unevenness", "activity", "averageRating"];
     const actualUpdates = Object.keys(req.body);
     const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidUpdate) {
-      return res.status(400).send({
-        error: "Los parámetros seleccionados no se puede modificar",
-      });
+      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar" });
     }
 
-    const track = await Track.findOneAndUpdate(
-      {
-        id: req.params.id,
-      },
-      req.body,
-      {
-        new: true,
-        runValidators: true,
-      }
-    )
+    const track = await Track.findOneAndUpdate({ id: req.params.id }, req.body, { new: true, runValidators: true });
     // TODO : revisar el populate
 
     if (track) {
@@ -89,56 +80,24 @@ trackRouter.patch("/tracks/:id", async (req, res) => {
 
 trackRouter.delete('/tracks/:id', async (req, res) => {
   try {
-    const track = await Track.findOne({
-      id: req.params.id
-    });
+    const track = await Track.findOne({ id: req.params.id });
 
     if (!track) {
-      return res.status(404).send({
-        error: "Ruta no encontrada"
-      });
+      return res.status(404).send({ error: "Ruta no encontrada" });
     }
+    // const vector = await Challenge.find({ tracks: { $in: [track._id] } });
 
-
-
-    const vector = await Challenge.find({ tracks: { $in: [track._id] } });
-
+    await Track.findByIdAndDelete(track._id); // Borra el elemento de B
     
-    // for(let i = 0; i < vector.length; i++) {
-    //   let pepe = await Challenge.findOneAndUpdate(
-    //     {
-    //       id: vector[i]._id,
-    //     },
-    //     {tracks: pepe.tracks.filter((track) => track._id !== track._id)},
-    //     {
-    //       new: true,
-    //       runValidators: true,
-    //     }
-    //   );
-    // }
-          
 
-    ///
-    // const challenge = await Challenge.findOneAndUpdate(
-    //   {
-    //     tracks: track._id,
-    //   },
-    //   {tracks: []}},
-    //   {
-    //     new: true,
-    //     runValidators: true,
-    //   }
-    // )
+    // ACTUALIZA : actualiza el atributo tracks de los retos cuando una ruta es eliminada
+    await Challenge.updateMany( { tracks: track._id }, { $pull: { tracks: track._id } });
+ 
 
-    ///
 
-    // const tracka = await Track.findByIdAndDelete(track._id);
-    // return res.send(user);
-    // // const tracka = await Track.findOneAndDelete({ id: req.params.id })
-    
-    // if (tracka) {
-    //   return res.send(tracka);
-    // }
+    if (track) {
+      return res.send(track);
+    }
     return res.status(404).send();
   } catch (error) {
     return res.status(500).send(error);

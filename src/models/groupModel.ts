@@ -1,6 +1,7 @@
 import { Document, Schema, model } from 'mongoose';
 import { UserStats } from '../types/type.js';
 import validator from 'validator';
+import { UsersExist, TracksExist } from '../tools/tools.js';
 
 
 export interface GroupDocumentInterface extends Document {
@@ -35,7 +36,12 @@ const GroupSchema = new Schema<GroupDocumentInterface>({
   participants: {
     type: [Schema.Types.ObjectId],
     default: [],
-    trim: true
+    ref: 'User',
+    validate: async (value: Schema.Types.ObjectId[]) => {
+      for (const id of value) {
+        await UsersExist(id);
+      }
+    }
   },
   groupTrainingStats: {
     type: [[Number]],
@@ -52,12 +58,22 @@ const GroupSchema = new Schema<GroupDocumentInterface>({
   groupRanking: {
     type: [Schema.Types.ObjectId],
     required: true,
-    ref: 'User'
+    ref: 'User',
+    validate: async (value: Schema.Types.ObjectId[]) => {
+      for (const id of value) {
+        await UsersExist(id);
+      }
+    }
   },
   groupFavoriteTracks: {
     type: [Schema.Types.ObjectId],
     default: [],
-    ref: 'Track'
+    ref: 'Track',
+    validate: async (value: Schema.Types.ObjectId[]) => {
+      for (const id of value) {
+        await TracksExist(id);
+      }
+    }
   },
   groupHistoricalTracks: {
     type: Map,
@@ -66,25 +82,37 @@ const GroupSchema = new Schema<GroupDocumentInterface>({
       type: [Schema.Types.ObjectId],
       ref: 'Track',
     },
-    // TODO : comprobar que el formato de la fecha introducida es correcto
-    validate: (value: Map<string, Schema.Types.ObjectId[]>) => {
-      const regex = /^\d{2}-\d{2}-\d{4}$/;
-      for (let key of value.keys()) {
-        if (!regex.test(key)) {
-          throw new Error('El formato de la fecha no es correcto');
-        } else if (Number(key.split('-')[0]) < 1 || Number(key.split('-')[0]) > 31) {
-          throw new Error('El dia introducido no es correcto');
-        } else if (Number(key.split('-')[1]) < 1 || Number(key.split('-')[1]) > 12) {
-          throw new Error('El mes introducido no es correcto');
+    validate: [{
+      validator: async (mapa: Map<string, Schema.Types.ObjectId[]>) => {
+        for (const value of mapa.values()) {
+          for (const id of value) {
+            await TracksExist(id);
+          }
+        }
+      },
+    },
+    {
+      validator: async (value: Map<string, Schema.Types.ObjectId[]>) => {
+        const regex = /^\d{2}-\d{2}-\d{4}$/;
+        for (let key of value.keys()) {
+          if (!regex.test(key)) {
+            throw new Error('El formato de la fecha no es correcto');
+          } else if (Number(key.split('-')[0]) < 1 || Number(key.split('-')[0]) > 31) {
+            throw new Error('El dia introducido no es correcto');
+          } else if (Number(key.split('-')[1]) < 1 || Number(key.split('-')[1]) > 12) {
+            throw new Error('El mes introducido no es correcto');
+          }
         }
       }
+    }]
+    // TODO : comprobar que el formato de la fecha introducida es correcto
+    
       // TODO : por alguna razon no funciona, osea acepta todo
       // for (let keys in value.keys()) {
       //   if (!validator.default.isDate(keys, {strictMode: true})) {
       //     throw new Error('La key debe ser una fecha');
       //   }
       // }
-    }
   }
 });
 

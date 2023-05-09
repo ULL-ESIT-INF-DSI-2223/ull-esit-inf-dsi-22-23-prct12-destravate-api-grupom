@@ -1,6 +1,7 @@
 import { Document, Schema, model } from 'mongoose';
 import { Coordinates } from '../types/type.js';
 import validator from 'validator';
+import { UsersExist } from '../tools/tools.js';
 
 
 export interface TrackDocumentInterface extends Document {
@@ -68,7 +69,20 @@ const TrackSchema = new Schema<TrackDocumentInterface>({
   users: {
     type: [Schema.Types.ObjectId],
     default: [],
-    ref: 'User'
+    ref: 'User',
+    validate:[{
+      validator: async (value: Schema.Types.ObjectId[]) => {
+        for (const id of value) {
+          await UsersExist(id);
+        }
+      }
+    },
+    {
+      validator: async (value: Schema.Types.ObjectId[]) => {
+        const arrayUnique = new Set(value);
+        return arrayUnique.size === value.length;
+      },
+    }]
   },
   activity: {
     type: String,
