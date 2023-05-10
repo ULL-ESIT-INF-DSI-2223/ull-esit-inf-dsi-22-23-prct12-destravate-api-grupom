@@ -50,7 +50,12 @@ TESTEADO LOS DOS TIPOS
 IMPLEMENTADO
 TESTEADO
 
+------------------------
 
+
+## si tenemos un usuario en users y ese usuario se elimina, se debe borrar tambien de users en challenge
+IMPLEMENTADO
+TESTEADO PARA LOS DOS
 
 
 ------------------------
@@ -103,12 +108,24 @@ TESTEADO
 ```
 
 ## si tenemos una ruta en tracks de challenge y esa ruta se elimina, se deberia borrar tambien de tracks en challenge
-FALTA
+IMPLEMENTADO
+TESTEADO
+
+## si creamos una ruta y le metemos usuarios, debe aparecer en el historico del usuario
+
 NO TESTEADO
 
+## si actualizamos una ruta y agregamos usuarios debe aparecer en el historico del usuario
 
+NO TESTEADO
 
+## si actualizamos una ruta y eliminamos usuarios debe desaparecer en el historico del usuario
 
+NO TESTEADO
+
+## si eliminamos una ruta debe desaparecer del historico del usuario
+
+NO TESTEADO
 
 
 ------------------------
@@ -126,7 +143,11 @@ NO TESTEADO
 ```
 
 
-## si tenemos un usuario en users y ese usuario se elimina, se debe borrar tambien de users en challenge
+## si creamos un reto, no pasa nada con el vector de usuarios, tampoco pasa nada con el vector de tracks
 IMPLEMENTADO
-TESTEADO PARA LOS DOS
- 
+TESTEADO
+
+
+## si eliminamos un reto, no pasa nada con el vector de usuarios, tampoco pasa nada con el vector de tracks
+IMPLEMENTADO
+TESTEADO

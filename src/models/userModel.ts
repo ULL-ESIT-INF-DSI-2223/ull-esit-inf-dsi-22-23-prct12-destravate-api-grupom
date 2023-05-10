@@ -2,6 +2,7 @@ import { Document, Schema, model } from 'mongoose';
 import { UserStats } from '../types/type.js';
 import validator from 'validator';
 import { UsersExist, GroupsExist, TracksExist, ChallengesExist } from '../tools/tools.js';
+import { Challenge } from './challengeModel.js';
 
 
 
@@ -15,6 +16,7 @@ export interface UserDocumentInterface extends Document {
   favoriteTracks?: Schema.Types.ObjectId[];
   favoriteChallenges?: Schema.Types.ObjectId[];
   history?: Map<string, Schema.Types.ObjectId[]>;
+  prueba: string;
 }
 
 
@@ -75,7 +77,6 @@ const UserSchema = new Schema<UserDocumentInterface>({
   },
   favoriteTracks: {
     type: [Schema.Types.ObjectId],
-    default: [],
     ref: 'Tracks',
     validate: async (value: Schema.Types.ObjectId[]) => {
       for (const id of value) {
@@ -98,7 +99,7 @@ const UserSchema = new Schema<UserDocumentInterface>({
     default: new Map<string, Schema.Types.ObjectId[]>(),
     of: {
       type: [Schema.Types.ObjectId],
-      ref: 'Track',
+      ref: 'Track'  
     },
     // TODO : comprobar que el formato de la fecha introducida es correcto
     validate: [{
@@ -119,7 +120,36 @@ const UserSchema = new Schema<UserDocumentInterface>({
         }
       },
     }]
+  },
+
+});
+
+UserSchema.pre('save', function(next) {
+  const contador = new Map<string, number>();
+  if (this.history !== undefined) {
+    this.history.forEach((value) => {
+      for (let i = 0; i < value.length; i++) {
+        if (contador.has(value[i].toString()) && contador.get(value[i].toString()) !== undefined) {
+          const actual = contador.get(value[i].toString());
+          if (actual !== undefined) {
+            contador.set(value[i].toString(), actual + 1);
+          }
+        } else {
+          contador.set(value[i].toString(), 1);
+        }
+      } 
+    });
   }
+  const ordenado = new Map([...contador.entries()].sort((a, b) => b[1] - a[1]));
+  for (const key of ordenado.keys()) {
+    this.favoriteTracks?.push((key as unknown) as Schema.Types.ObjectId);
+  }
+  Challenge.find({users: this._id }).then((challenges) => {
+    for (const challenge of challenges) {
+      this.favoriteChallenges?.push(challenge._id);
+    }
+  });
+  next();
 });
 
 
