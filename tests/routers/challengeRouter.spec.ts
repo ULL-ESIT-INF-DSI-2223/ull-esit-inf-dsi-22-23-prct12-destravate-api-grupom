@@ -34,6 +34,10 @@ describe('POST /challenge', () => {
 
     expect(response.body.tracks).to.eql([]);
   });
+
+  it('Una reto deberia fallar si se intenta crear con parámetros insuficientes', async () => {
+    const reto = await request(app).post('/challenges').send({}).expect(500);
+  });
 });
 
 
