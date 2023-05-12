@@ -4,7 +4,22 @@ import validator from 'validator';
 import { UsersExist, GroupsExist, TracksExist, ChallengesExist } from '../tools/tools.js';
 
 
-
+/**
+ * Interfaz que define las propiedades que debe tener un usuario
+ * @property {string} username - Nombre de usuario
+ * @property {string} name - Nombre real del usuario
+ * @property {string} activity - Actividad que realiza el usuario
+ * @property {Schema.Types.ObjectId[]} friends - Array de ObjectIds de los amigos del usuario
+ * @property {Schema.Types.ObjectId[]} friendsGroups - Array de ObjectIds de los grupos de amigos del usuario
+ * @property {Stats} trainingStats - Estadisticas de entrenamiento del usuario
+ * @property {Schema.Types.ObjectId[]} favoriteTracks - Array de ObjectIds de las pistas favoritas del usuario
+ * @property {Schema.Types.ObjectId[]} favoriteChallenges - Array de ObjectIds de los retos favoritos del usuario
+ * @property {Map<string, Schema.Types.ObjectId[]>} history - Mapa de fechas y arrays de ObjectIds de las pistas 
+ * que ha realizado el usuario
+ * @trows {Error} - Si el nombre de usuario no es alfanumérico
+ * @trows {Error} - Si el array de amigos contiene un ObjectId que no existe en la base de datos
+ * @trows {Error} - Si el array de grupos de amigos contiene un ObjectId que no existe en la base de datos
+ */
 export interface UserDocumentInterface extends Document {
   username: string;
   name: string;
@@ -17,7 +32,19 @@ export interface UserDocumentInterface extends Document {
   history?: Map<string, Schema.Types.ObjectId[]>;
 }
 
-
+/**
+ * Esquema de la base de datos para los usuarios de mongoose
+ * @property {string} username - Nombre de usuario
+ * @property {string} name - Nombre real del usuario
+ * @property {string} activity - Actividad que realiza el usuario
+ * @property {Schema.Types.ObjectId[]} friends - Array de ObjectIds de los amigos del usuario
+ * @property {Schema.Types.ObjectId[]} friendsGroups - Array de ObjectIds de los grupos de amigos del usuario
+ * @property {Stats} trainingStats - Estadisticas de entrenamiento del usuario
+ * @property {Schema.Types.ObjectId[]} favoriteTracks - Array de ObjectIds de las pistas favoritas del usuario
+ * @property {Schema.Types.ObjectId[]} favoriteChallenges - Array de ObjectIds de los retos favoritos del usuario
+ * @property {Map<string, Schema.Types.ObjectId[]>} history - Mapa de fechas y arrays de ObjectIds de las pistas
+ * que ha realizado el usuario
+ */
 const UserSchema = new Schema<UserDocumentInterface>({
   name: {
     type: String,

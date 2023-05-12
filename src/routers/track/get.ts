@@ -1,5 +1,12 @@
 import { Track } from "../../models/trackModel.js";
 
+/**
+ * Manejador de la petición GET /tracks
+ * Se debe dar el id por query
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const getTrackQuery = async (req: any, res: any) => {
   const filter = req.query.id ? { id: req.query.id.toString() } : {};
 
@@ -15,6 +22,13 @@ export const getTrackQuery = async (req: any, res: any) => {
   }
 };
 
+/**
+ * Manejador de la petición GET /tracks
+ * Se debe dar el id por params
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const getTrack = async (req: any, res: any) => {
   try {
     const filter = req.params.id ? { id: req.params.id.toString() } : {};

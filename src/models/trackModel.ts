@@ -3,7 +3,25 @@ import { Coordinates } from '../types/type.js';
 import validator from 'validator';
 import { UsersExist } from '../tools/tools.js';
 
-
+/**
+ * Interfaz que define las propiedades que debe tener un documento de la colección Track
+ * @interface TrackDocumentInterface
+ * @extends Document
+ * @property {number} id - Identificador de la ruta
+ * @property {string} name - Nombre de la ruta
+ * @property {Coordinates} startGeolocation - Coordenadas de inicio de la ruta
+ * @property {Coordinates} endGeolocation - Coordenadas de fin de la ruta
+ * @property {number} distance - Distancia de la ruta
+ * @property {number} unevenness - Desnivel de la ruta
+ * @property {Schema.Types.ObjectId[]} users - Array de identificadores de usuarios que han realizado la ruta
+ * @property {'Bicicleta' | 'Correr'} activity - Actividad de la ruta
+ * @property {number} averageRating - Valoración media de la ruta
+ * @trows {Error} - Si el nombre de la ruta no comienza por mayúscula
+ * @trows {Error} - Si el nombre de la ruta no es alfanumérico
+ * @trows {Error} - Si la geolocalización no tiene dos coordenadas
+ * @trows {Error} - Si la distancia es menor que cero
+ * @trows {Error} - Si el identificador de usuario no existe
+ */
 export interface TrackDocumentInterface extends Document {
   id: number,
   name: string,
@@ -16,7 +34,20 @@ export interface TrackDocumentInterface extends Document {
   averageRating?: number
 }
 
-
+/**
+ * Esquema de la colección Track en la base de datos de Mongoose
+ * @const TrackSchema
+ * @type {Schema<TrackDocumentInterface>}
+ * @property {number} id - Identificador de la ruta
+ * @property {string} name - Nombre de la ruta
+ * @property {Coordinates} startGeolocation - Coordenadas de inicio de la ruta
+ * @property {Coordinates} endGeolocation - Coordenadas de fin de la ruta
+ * @property {number} distance - Distancia de la ruta
+ * @property {number} unevenness - Desnivel de la ruta
+ * @property {Schema.Types.ObjectId[]} users - Array de identificadores de usuarios que han realizado la ruta
+ * @property {'Bicicleta' | 'Correr'} activity - Actividad de la ruta
+ * @property {number} averageRating - Valoración media de la ruta
+ */
 const TrackSchema = new Schema<TrackDocumentInterface>({
   id: {
     type: Number,

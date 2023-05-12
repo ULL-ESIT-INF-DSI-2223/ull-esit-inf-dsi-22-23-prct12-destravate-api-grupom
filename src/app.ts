@@ -6,6 +6,10 @@ import { challengeRouter } from './routers/challengeRouter.js'
 import { defaultRouter } from './routers/defaultRouter.js';
 import { trackRouter } from './routers/trackRouter.js'
 
+/**
+ * @description Esta es la aplicacion de express
+ * @type {Express}
+ */
 export const app = express();
 
 app.use(express.json());

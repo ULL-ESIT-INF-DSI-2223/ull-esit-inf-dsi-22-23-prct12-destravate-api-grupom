@@ -1,7 +1,14 @@
 import { Challenge } from '../../models/challengeModel.js';
 import { User } from '../../models/userModel.js';
 
-
+/**
+ * Manejador de la petición PATCH /challenges
+ * Se debe dar el id por query
+ * Se debe proporcionar un body con los datos del nuevo reto
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const patchChallengeQuery = async (req: any, res: any) => {
   if (!req.query.id) {
     return res.status(400).send({ error: 'A id must be provided' });
@@ -35,8 +42,14 @@ export const patchChallengeQuery = async (req: any, res: any) => {
 };
 
 
-
-
+/**
+ * Manejador de la petición PATCH /challenges
+ * Se debe dar el id por params
+ * Se debe proporcionar un body con los datos del nuevo reto
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const patchChallenge = async (req: any, res: any) => {
   try {
     const allowedUpdates = ["name", "tracks", "activity", "totalDistance", "users"];

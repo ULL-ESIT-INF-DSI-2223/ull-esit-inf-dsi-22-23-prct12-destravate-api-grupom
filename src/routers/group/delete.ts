@@ -2,7 +2,13 @@ import { Group } from "../../models/groupModel.js";
 import { User } from "../../models/userModel.js";
 
 
-
+/**
+ * Manejador de la petición DELETE /groups
+ * Se debe pasar el id por params
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const deleteGroupQuery = async (req: any, res: any) => {
   if (!req.query.id) {
     return res.status(400).send({ error: 'A groupname must be provided' });
@@ -25,7 +31,13 @@ export const deleteGroupQuery = async (req: any, res: any) => {
   }
 };
 
-
+/**
+ * Manejador de la petición DELETE /groups
+ * Se debe pasar el id por params
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const deleteGroup = async (req: any, res: any) => {
   if (!req.params.id) {
     return res.status(400).send({ error: 'A id must be provided' });

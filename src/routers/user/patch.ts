@@ -3,7 +3,14 @@ import { Track } from "../../models/trackModel.js";
 import { User } from "../../models/userModel.js";
 import { Stats } from "../../../src/types/type.js"
 
-
+/**
+ * Manejador de la petición PATCH /users
+ * Se debe dar el username por query
+ * Se debe proporcionar un body con los datos del nuevo reto
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const patchUserQuery =  async (req: any, res: any) => {
   if (!req.query.username) {
     return res.status(400).send({ error: 'A username must be provided' });
@@ -104,6 +111,14 @@ export const patchUserQuery =  async (req: any, res: any) => {
   }
 };
 
+/**
+ * Manejador de la petición PATCH /users
+ * Se debe dar el id por params
+ * Se debe proporcionar un body con los datos del nuevo reto
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const patchUser = async (req: any, res: any) => {
   if (!req.params.username) {
     return res.status(400).send({ error: 'A username must be provided' });

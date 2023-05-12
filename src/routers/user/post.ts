@@ -3,6 +3,12 @@ import { Track } from "../../models/trackModel.js";
 import { User } from "../../models/userModel.js";
 import { Stats } from "../../../src/types/type.js"
 
+/**
+ * Manejador de la petición POST /users
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const postUser = async (req: any, res: any) => {
   try {
 

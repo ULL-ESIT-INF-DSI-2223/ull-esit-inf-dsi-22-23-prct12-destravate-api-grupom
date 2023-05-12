@@ -3,7 +3,14 @@ import { User } from "../../models/userModel.js";
 import { Stats } from "../../../src/types/type.js"
 import { Track } from "../../models/trackModel.js";
 
-
+/**
+ * Manejador de la petición PATCH /groups
+ * Se debe dar el id por query
+ * Se debe proporcionar un body con los datos del nuevo reto
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const patchGroupQuery = async (req: any, res: any) => {
   if (!req.query.id) {
     return res.status(400).send({ error: 'A groupname must be provided' });
@@ -65,9 +72,6 @@ export const patchGroupQuery = async (req: any, res: any) => {
 
     const groupActualizado = await Group.findOne({id: req.query.id});
 
-
-
-    // TODO : revisar el populate
     if (groupActualizado) {
       return res.send(groupActualizado);
     }
@@ -77,8 +81,14 @@ export const patchGroupQuery = async (req: any, res: any) => {
   }
 };
 
-
-
+/**
+ * Manejador de la petición PATCH /groups
+ * Se debe dar el id por params
+ * Se debe proporcionar un body con los datos del nuevo reto
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const patchGroup = async (req: any, res: any) => {
   try {
     const allowedUpdates = ["name", "groupHistoricalTracks", "participants"];
@@ -114,7 +124,6 @@ export const patchGroup = async (req: any, res: any) => {
         await User.findOneAndUpdate({ _id: group.participants[i] }, { $addToSet: { friendsGroups: group._id }});
       }
     }
-  
 
     // ACTUALIZA: las estadísticas del usuario
     let estadisticas: Stats = [[0,0],[0,0],[0,0]]
@@ -137,8 +146,6 @@ export const patchGroup = async (req: any, res: any) => {
 
     const groupActualizado = await Group.findOne({id: req.params.id});
 
-
-    // TODO : revisar el populate
     if (groupActualizado) {
       return res.send(groupActualizado);
     }

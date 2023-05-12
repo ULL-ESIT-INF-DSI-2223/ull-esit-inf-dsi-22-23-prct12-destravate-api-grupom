@@ -742,5 +742,3 @@ Por último, nos gustaría agradecer a los profesores de la asignatura por su de
 - [API REST](https://ull-esit-inf-dsi-2223.github.io/nodejs-theory/nodejs-rest-api.html)
 
 - [SuperTest](https://ull-esit-inf-dsi-2223.github.io/nodejs-theory/nodejs-rest-api-testing.html)
-
-

@@ -1,5 +1,12 @@
 import { User } from "../../models/userModel.js";
 
+/**
+ * Manejador de la petición GET /users
+ * Se debe dar el username por query
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const getUserQuery =  async (req: any, res: any) => {
   try {
     const filter = req.query.username ? {username: req.query.username.toString()} : {};
@@ -15,7 +22,13 @@ export const getUserQuery =  async (req: any, res: any) => {
   }
 };
 
-
+/**
+ * Manejador de la petición GET /users
+ * Se debe dar el username por params
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const getUser =  async (req: any, res: any) => {
 
   try {

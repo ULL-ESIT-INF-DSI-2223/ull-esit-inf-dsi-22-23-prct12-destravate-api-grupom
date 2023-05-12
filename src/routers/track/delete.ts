@@ -1,6 +1,13 @@
 import { Track } from "../../models/trackModel.js";
 import { Challenge } from "../../models/challengeModel.js";
 
+/**
+ * Manejador de la petición DELETE /tracks
+ * Se debe pasar el id por params
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const deleteTrack = async (req: any, res: any) => {
   if (!req.params.id) {
     return res.status(400).send({ error: 'A username must be provided' });
@@ -24,7 +31,13 @@ export const deleteTrack = async (req: any, res: any) => {
 };
 
 
-
+/**
+ * Manejador de la petición DELETE /tracks
+ * Se debe pasar el id por params
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const deleteTrackQuery = async (req: any, res: any) => {
   if (!req.query.id) {
     return res.status(400).send({ error: 'A username must be provided' });

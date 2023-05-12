@@ -2,7 +2,13 @@ import { Challenge } from "../../models/challengeModel.js";
 import { Group } from "../../models/groupModel.js";
 import { User } from "../../models/userModel.js";
 
-
+/**
+ * Manejador de la petición DELETE /users
+ * Se debe pasar el username por query
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const deleteUserQuery =  async (req: any, res: any) => {
   if (!req.query.username) {
     return res.status(400).send({ error: 'A username must be provided' });
@@ -29,7 +35,13 @@ export const deleteUserQuery =  async (req: any, res: any) => {
   }
 };
   
-  
+/**
+ * Manejador de la petición DELETE /users
+ * Se debe pasar el username por params
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const deleteUser =  async (req: any, res: any) => {
   if (!req.params.username) {
     return res.status(400).send({ error: 'A username must be provided' });

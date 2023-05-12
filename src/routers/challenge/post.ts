@@ -1,6 +1,12 @@
 import { Challenge } from '../../models/challengeModel.js';
 import { User } from '../../models/userModel.js';
 
+/**
+ * Manejador de la petición POST /challenges
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const postChallenge = async (req: any, res: any) => {
   try {
     const challenge = new Challenge(req.body);

@@ -3,7 +3,12 @@ import { User } from "../../models/userModel.js";
 import { Stats } from "../../../src/types/type.js"
 import { Track } from "../../models/trackModel.js";
 
-
+/**
+ * Manejador de la petición POST /groups
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const postGroup = async (req: any, res: any) => {
   const group = new Group(req.body);
   

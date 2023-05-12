@@ -3,7 +3,24 @@ import { Stats } from '../types/type.js';
 import validator from 'validator';
 import { UsersExist, TracksExist } from '../tools/tools.js';
 
-
+/**
+ * Interfaz que define las propiedades que debe tener un grupo 
+ * @property id: identificador del grupo
+ * @property name: nombre del grupo
+ * @property participants: array de identificadores de usuarios que pertenecen al grupo
+ * @property groupTrainingStats: array de arrays de dos numeros que representan el numero de entrenamientos 
+ *  y la duracion total de los mismos
+ * @property groupRanking: array de identificadores de usuarios que pertenecen al grupo ordenados por el numero 
+ *  de entrenamientos
+ * @property groupFavoriteTracks: array de identificadores de las canciones mas escuchadas por el grupo
+ * @property groupHistoricalTracks: mapa de arrays de identificadores de canciones escuchadas por el grupo en
+ *  una fecha determinada
+ * @trows Error: si el nombre del grupo no comienza por mayuscula
+ * @trows Error: si el nombre del grupo no es alfanumerico
+ * @trows Error: si el array de estadisticas de entrenamiento no tiene 3 arrays
+ * @trows Error: si alguno de los arrays de estadisticas de entrenamiento no tiene 2 numeros
+ * @trows Error: si alguno de los identificadores de grupos no existe
+ */
 export interface GroupDocumentInterface extends Document {
   id: number;
   name: string;
@@ -14,7 +31,19 @@ export interface GroupDocumentInterface extends Document {
   groupHistoricalTracks?: Map<string, Schema.Types.ObjectId[]>;
 }
 
-
+/**
+ * Esquema de un grupo de la base de datos en Mongoose
+ * @property id: identificador del grupo
+ * @property name: nombre del grupo
+ * @property participants: array de identificadores de usuarios que pertenecen al grupo
+ * @property groupTrainingStats: array de arrays de dos numeros que representan el numero de entrenamientos
+ * y la duracion total de los mismos
+ * @property groupRanking: array de identificadores de usuarios que pertenecen al grupo ordenados por el numero
+ * de entrenamientos
+ * @property groupFavoriteTracks: array de identificadores de las canciones mas escuchadas por el grupo
+ * @property groupHistoricalTracks: mapa de arrays de identificadores de canciones escuchadas por el grupo en
+ * una fecha determinada
+ */
 const GroupSchema = new Schema<GroupDocumentInterface>({
   id: {
     type: Number,

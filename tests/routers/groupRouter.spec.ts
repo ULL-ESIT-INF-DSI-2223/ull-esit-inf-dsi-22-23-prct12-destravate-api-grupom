@@ -128,11 +128,11 @@ describe('GET /groups', () => {
   });
   
   it ('No se obtiene un grupo correctamente', async () => {
-    const aaaa = await request(app).get('/groups?id=1000').expect(404);
+    await request(app).get('/groups?id=1000').expect(404);
   });
 
   it ('No se obtiene un grupo correctamente', async () => {
-    const response = await request(app).get('/groups/1000').expect(404);
+    await request(app).get('/groups/1000').expect(404);
   });
 
 });

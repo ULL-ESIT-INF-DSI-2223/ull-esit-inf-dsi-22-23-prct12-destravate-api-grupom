@@ -1,6 +1,13 @@
 import { Track } from "../../models/trackModel.js";
 
-
+/**
+ * Manejador de la petición PATCH /tracks
+ * Se debe dar el id por query
+ * Se debe proporcionar un body con los datos del nuevo reto
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const patchTrackQuery = async (req: any, res: any) => {
   if (!req.query.id) {
     return res.status(400).send({ error: 'A username must be provided' });
@@ -26,7 +33,14 @@ export const patchTrackQuery = async (req: any, res: any) => {
   }
 };
 
-
+/**
+ * Manejador de la petición PATCH /tracks
+ * Se debe dar el id por params
+ * Se debe proporcionar un body con los datos del nuevo reto
+ * @param req Request
+ * @param res Response
+ * @returns Response
+ */
 export const patchTrack = async (req: any, res: any) => {
   try {
     const allowedUpdates = ["name", "startGeolocation", "endGeolocation", "distance", "unevenness", "activity", "averageRating"];

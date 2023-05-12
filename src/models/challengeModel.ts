@@ -1,8 +1,16 @@
 import { Document, Schema, model } from "mongoose";
 import validator from "validator";
 import { UsersExist, TracksExist } from '../tools/tools.js';
-import { User } from './userModel.js';
 
+/**
+ * Interfaz que define las propiedades que debe tener un objeto de tipo Challenge
+ * @property id identificador del reto
+ * @property name nombre del reto
+ * @property tracks lista de identificadores de las pistas que componen el reto
+ * @property activity tipo de actividad del reto
+ * @property totalDistance distancia total del reto
+ * @property users lista de identificadores de los usuarios que han completado el reto
+ */
 export interface ChallengeDocumentInterface extends Document {
   id: number;
   name: string;
@@ -12,6 +20,19 @@ export interface ChallengeDocumentInterface extends Document {
   users?: Schema.Types.ObjectId[];
 }
 
+/**
+ * Esquema de Mongoose para el modelo Challenge (Reto)
+ * @property id identificador del reto
+ * @property name nombre del reto
+ * @property tracks lista de identificadores de las pistas que componen el reto
+ * @property activity tipo de actividad del reto
+ * @property totalDistance distancia total del reto
+ * @property users lista de identificadores de los usuarios que han completado el reto
+ * @throws Error cuando el nombre del reto no comienza con mayúscula
+ * @throws Error cuando el nombre del reto contiene caracteres no alfanuméricos
+ * @throws Error cuando el identificador de una pista no existe
+ * @throws Error cuando el identificador de un usuario no existe
+ */
 const ChallengeSchema = new Schema<ChallengeDocumentInterface>({
   id: {
     type: Number,
@@ -61,30 +82,5 @@ const ChallengeSchema = new Schema<ChallengeDocumentInterface>({
     }
   },
 });
-
-// ChallengeSchema.pre('save', function(next) {
-//   if (this.users !== undefined) {
-//     for(let i = 0; i < this.users.length; ++i) {
-//       // const hola1 = User.findById(this.users[i])
-//       // console.log(hola1)
-//       User.findOneAndUpdate({ _id: this.users[i] }, { $addToSet: { favoriteChallenges: this._id } })
-//       const hola = User.findById(this.users[i])
-//       const a = new User(hola)
-//       console.log(a.username)
-
-//       console.log(a.favoriteChallenges)
-//     }
-//   }
-
-//   // User.find({users: this._id }).then((challenges) => {
-//   //   for (const challenge of challenges) {
-//   //     this.favoriteChallenges?.push(challenge._id);
-//   //   }
-//   // });
-//   next()
-// });
-
-
-
 
 export const Challenge = model<ChallengeDocumentInterface>("Challenge", ChallengeSchema);
