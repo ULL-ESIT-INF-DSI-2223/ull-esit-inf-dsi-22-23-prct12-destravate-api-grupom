@@ -21,6 +21,6 @@ export const postChallenge = async (req: any, res: any) => {
     await challenge.save();
     return res.status(201).send(challenge);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "No se añadió correctamente el reto", error: error});
   }
 };

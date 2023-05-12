@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.73% </span>
+                <span class="strong">88.4% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>63/71</span>
+                <span class='fraction'>61/69</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.73% </span>
+                <span class="strong">88.4% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>63/71</span>
+                <span class='fraction'>61/69</span>
             </div>
         
             
@@ -132,9 +132,7 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -165,7 +163,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -187,7 +184,6 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -218,15 +214,14 @@ import { User } from "../../models/userModel.js";
  */
 export const deleteUserQuery =  async (req: any, res: any) =&gt; {
   if (!req.query.username) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(400).send({ error: 'A username must be provided' });</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
    try {
     const user = await User.findOne({username: req.query.username.toString()});
      if (!user) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'Usuario no encontrado' });
     }
 &nbsp;
-    // TODO : darse cuenta del borrado en cascada
     await User.updateMany( { friends: user._id }, { $pull: { friends: user._id }});
 &nbsp;
      // ACTUALIZA: Se encarga de mantener sincronizados los ususarios con los grupos y los grupos con los usuarios
@@ -238,7 +233,7 @@ export const deleteUserQuery =  async (req: any, res: any) =&gt; {
     await User.findByIdAndDelete(user._id);
     return res.send(user);
   } <span class="branch-0 cbranch-no" title="branch not covered" >catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(500).send(error);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el usuario', error});</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 };
   
@@ -251,17 +246,16 @@ export const deleteUserQuery =  async (req: any, res: any) =&gt; {
  */
 export const deleteUser =  async (req: any, res: any) =&gt; {
   if (!req.params.username) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(400).send({ error: 'A username must be provided' });</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 &nbsp;
   try {
     const user = await User.findOne({username: req.params.username.toString()});
 &nbsp;
     if (!user) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'Usuario no encontrado' });
     }
 &nbsp;
-    // TODO : darse cuenta del borrado en cascada
     await User.updateMany( { friends: user._id }, { $pull: { friends: user._id }});
 &nbsp;
     // ACTUALIZA: Se encarga de mantener sincronizados los ususarios con los grupos y los grupos con los usuarios
@@ -273,7 +267,7 @@ export const deleteUser =  async (req: any, res: any) =&gt; {
     await User.findByIdAndDelete(user._id);
     return res.send(user);
   } <span class="branch-0 cbranch-no" title="branch not covered" >catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(500).send(error);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el usuario', error});</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 };
   </pre></td></tr></table></pre>
@@ -283,7 +277,7 @@ export const deleteUser =  async (req: any, res: any) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-05-12T17:29:53.603Z
+                at 2023-05-12T18:50:28.837Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

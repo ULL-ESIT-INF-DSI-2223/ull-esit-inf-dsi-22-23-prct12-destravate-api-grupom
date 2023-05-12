@@ -13,7 +13,7 @@ import { Track } from "../../models/trackModel.js";
  */
 export const patchGroupQuery = async (req: any, res: any) => {
   if (!req.query.id) {
-    return res.status(400).send({ error: 'A groupname must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un id' });
   }
   try {
     const allowedUpdates = ["name", "groupHistoricalTracks", "participants"];
@@ -21,7 +21,7 @@ export const patchGroupQuery = async (req: any, res: any) => {
     const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar" });
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
     }
 
     // Grupo antes de ser modificado
@@ -75,9 +75,9 @@ export const patchGroupQuery = async (req: any, res: any) => {
     if (groupActualizado) {
       return res.send(groupActualizado);
     }
-    return res.status(404).send('No se ha encontrado el grupo');
+    return res.status(404).send({msg: "El grupo no se actualizó correctamente"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});
   }
 };
 
@@ -90,6 +90,9 @@ export const patchGroupQuery = async (req: any, res: any) => {
  * @returns Response
  */
 export const patchGroup = async (req: any, res: any) => {
+  if (!req.params.id) {
+    return res.status(400).send({ msg: 'Se debe proporcionar un id' });
+  }
   try {
     const allowedUpdates = ["name", "groupHistoricalTracks", "participants"];
     const actualUpdates = Object.keys(req.body);
@@ -149,8 +152,8 @@ export const patchGroup = async (req: any, res: any) => {
     if (groupActualizado) {
       return res.send(groupActualizado);
     }
-    return res.status(404).send('No se ha encontrado el grupo');
+    return res.status(404).send({msg: "El grupo no se actualizó correctamente"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});
   }
 };

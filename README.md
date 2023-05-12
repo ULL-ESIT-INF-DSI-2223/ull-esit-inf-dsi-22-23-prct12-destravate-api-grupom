@@ -36,8 +36,6 @@
 
 - [Documentación](#documentación)
 
-- [Despliegue](#despliegue)
-
 - [Conclusiones](#conclusiones)
 
 - [Referencias](#referencias)
@@ -473,7 +471,6 @@ export const patchUserQuery =  async (req: any, res: any) => {
     
     const userActualizado = await User.findOne({username: req.query.username});
 
-    // TODO : revisar el populate
     if (userActualizado) {
       return res.send(userActualizado);
     }
@@ -516,7 +513,6 @@ export const deleteUserQuery =  async (req: any, res: any) => {
       return res.status(404).send();
     }
 
-    // TODO : darse cuenta del borrado en cascada
     await User.updateMany( { friends: user._id }, { $pull: { friends: user._id }});
 
      // ACTUALIZA: Se encarga de mantener sincronizados los ususarios con los grupos y los grupos con los usuarios
@@ -715,12 +711,6 @@ describe('POST /users', () => {
   });
 });
 ```
-
-
-## Despliegue
-
-
-
 
 
 ## Conclusiones

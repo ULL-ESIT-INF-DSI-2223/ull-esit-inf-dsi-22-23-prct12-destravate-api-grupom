@@ -10,19 +10,19 @@ import { Challenge } from '../../models/challengeModel.js';
  */
 export const deleteChallenge =  async (req: any, res: any) => {
   if (!req.params.id) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de reto' });
   }
   try {
     const challenge = await Challenge.findOne({id: req.params.id.toString()});
 
     if (!challenge) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'reto no encontrado' });
     }
 
     await Challenge.findByIdAndDelete(challenge._id);
     return res.send(challenge);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el reto', error});
   }
 };
 
@@ -35,18 +35,18 @@ export const deleteChallenge =  async (req: any, res: any) => {
  */
 export const deleteChallengeQuery =  async (req: any, res: any) => {
   if (!req.query.id) {
-    return res.status(400).send({ error: 'A id must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de reto' });
   }
   try {
     const challenge = await Challenge.findOne({id: req.query.id.toString()});
 
     if (!challenge) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'reto no encontrado' });
     }
 
     await Challenge.findByIdAndDelete(challenge._id);
     return res.send(challenge);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el reto', error});
   }
 };

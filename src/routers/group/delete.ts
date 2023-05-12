@@ -11,14 +11,14 @@ import { User } from "../../models/userModel.js";
  */
 export const deleteGroupQuery = async (req: any, res: any) => {
   if (!req.query.id) {
-    return res.status(400).send({ error: 'A groupname must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de grupo' });
   }
 
   try {
     const group = await Group.findOne({ id: req.query.id.toString() });
 
     if (!group) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'grupo no encontrado' });
     }
 
     // ACTUALIZA: Se encarga de mantener sincronizados los ususarios con los grupos y los grupos con los usuarios
@@ -27,7 +27,7 @@ export const deleteGroupQuery = async (req: any, res: any) => {
     await Group.findByIdAndDelete(group._id);
     return res.send(group);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el grupo', error});
   }
 };
 
@@ -40,14 +40,14 @@ export const deleteGroupQuery = async (req: any, res: any) => {
  */
 export const deleteGroup = async (req: any, res: any) => {
   if (!req.params.id) {
-    return res.status(400).send({ error: 'A id must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de grupo' });
   }
 
   try {
     const group = await Group.findOne({id: req.params.id.toString()});
 
     if (!group) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'grupo no encontrado' });
     }
 
     // ACTUALIZA: Se encarga de mantener sincronizados los ususarios con los grupos y los grupos con los usuarios
@@ -56,6 +56,6 @@ export const deleteGroup = async (req: any, res: any) => {
     await Group.findByIdAndDelete(group._id);
     return res.send(group);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el grupo', error});
   }
 };

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.64% </span>
+                <span class="strong">81.86% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>181/219</span>
+                <span class='fraction'>176/215</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.64% </span>
+                <span class="strong">81.86% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>181/219</span>
+                <span class='fraction'>176/215</span>
             </div>
         
             
@@ -278,10 +278,7 @@
 <a name='L213'></a><a href='#L213'>213</a>
 <a name='L214'></a><a href='#L214'>214</a>
 <a name='L215'></a><a href='#L215'>215</a>
-<a name='L216'></a><a href='#L216'>216</a>
-<a name='L217'></a><a href='#L217'>217</a>
-<a name='L218'></a><a href='#L218'>218</a>
-<a name='L219'></a><a href='#L219'>219</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L216'></a><a href='#L216'>216</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -339,7 +336,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -377,7 +373,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -446,7 +441,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -493,13 +487,13 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span></td><td class="text"><pre class="prettyprint lang-js">import { Group } from "../../models/groupModel.js";
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Group } from "../../models/groupModel.js";
 import { Track } from "../../models/trackModel.js";
 import { User } from "../../models/userModel.js";
 import { Stats } from "../../../src/types/type.js"
@@ -514,7 +508,7 @@ import { Stats } from "../../../src/types/type.js"
  */
 export const patchUserQuery =  async (req: any, res: any) =&gt; {
   if (!req.query.username) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });
   }
 &nbsp;
   try {
@@ -523,7 +517,7 @@ export const patchUserQuery =  async (req: any, res: any) =&gt; {
     const isValidUpdate = actualUpdates.every((update) =&gt; allowedUpdates.includes(update));
 &nbsp;
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar"});
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
     }
 &nbsp;
     // Usuario antes de ser modificado
@@ -556,7 +550,6 @@ export const patchUserQuery =  async (req: any, res: any) =&gt; {
       }
     }
 &nbsp;
-    // TODO : encerrar esto en una función
     // ACTUALIZA: Se encarga de mantener sincronizados los ususarios de rutas, con las rutas de usuarios
     if (user &amp;&amp; user.history !== undefined) {
       const values = [...new Set([...(user.history.values())].flat())];
@@ -602,13 +595,12 @@ export const patchUserQuery =  async (req: any, res: any) =&gt; {
     
     const userActualizado = await User.findOne({username: req.query.username});
 &nbsp;
-    // TODO : revisar el populate
     if (userActualizado) {
       return res.send(userActualizado);
     }
-<span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >    return res.status(404).send();</span></span>
+<span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >    return res.status(404).send({msg: "El usuario no se actualizó correctamente"});</span></span>
 <span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(500).send(error);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 };
 &nbsp;
@@ -622,7 +614,7 @@ export const patchUserQuery =  async (req: any, res: any) =&gt; {
  */
 export const patchUser = async (req: any, res: any) =&gt; {
   if (!req.params.username) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(400).send({ error: 'A username must be provided' });</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
   try {
     const allowedUpdates = ["name", "activity", "friends", "friendsGroups", "history"];
@@ -630,7 +622,7 @@ export const patchUser = async (req: any, res: any) =&gt; {
     const isValidUpdate = actualUpdates.every((update) =&gt; allowedUpdates.includes(update));
 &nbsp;
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar"});
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
     }
 &nbsp;
     // Usuario antes de ser modificado
@@ -663,7 +655,6 @@ export const patchUser = async (req: any, res: any) =&gt; {
 <span class="cstat-no" title="statement not covered" >      }</span>
     }
 &nbsp;
-    // TODO : encerrar esto en una función
     // ACTUALIZA: Se encarga de mantener sincronizados los ususarios de rutas, con las rutas de usuarios
     if (user &amp;&amp; user.history !== undefined) {
       const values = [...new Set([...(user.history.values())].flat())];
@@ -708,23 +699,23 @@ export const patchUser = async (req: any, res: any) =&gt; {
       
     const userActualizado = await User.findOne({username: req.params.username});
 &nbsp;
-&nbsp;
-    // TODO : revisar el populate
     if (userActualizado) {
       return res.send(userActualizado);
     }
-<span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >    return res.status(404).send();</span></span>
+<span class="cstat-no" title="statement not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >    return res.status(404).send({msg: "El usuario no se actualizó correctamente"});</span></span>
+<span class="cstat-no" title="statement not covered" ></span>
 <span class="cstat-no" title="statement not covered" >  } catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(500).send(error);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-};</pre></td></tr></table></pre>
+};
+&nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-05-12T17:29:53.603Z
+                at 2023-05-12T18:50:28.837Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

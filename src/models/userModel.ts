@@ -126,7 +126,6 @@ const UserSchema = new Schema<UserDocumentInterface>({
       type: [Schema.Types.ObjectId],
       ref: 'Track'  
     },
-    // TODO : comprobar que el formato de la fecha introducida es correcto
     validate: [{
       validator: async (value: Map<string, Schema.Types.ObjectId[]>) => {
         const regex = /^\d{2}-\d{2}-\d{4}$/;

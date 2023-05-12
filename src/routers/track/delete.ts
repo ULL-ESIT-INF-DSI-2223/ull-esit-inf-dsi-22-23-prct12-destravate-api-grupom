@@ -10,14 +10,14 @@ import { Challenge } from "../../models/challengeModel.js";
  */
 export const deleteTrack = async (req: any, res: any) => {
   if (!req.params.id) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });
   }
 
   try {
     const track = await Track.findOne({ id: req.params.id.toString()});
 
     if (!track) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'Usuario no encontrado' });
     }
 
     // ACTUALIZA: Se encarga de mantener sincronizados retos y las rutas
@@ -26,7 +26,7 @@ export const deleteTrack = async (req: any, res: any) => {
     await Track.findByIdAndDelete(track._id);
     return res.send(track);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el usuario', error});
   }
 };
 
@@ -40,14 +40,14 @@ export const deleteTrack = async (req: any, res: any) => {
  */
 export const deleteTrackQuery = async (req: any, res: any) => {
   if (!req.query.id) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });
   }
 
   try {
     const track = await Track.findOne({ id: req.query.id.toString()});
 
     if (!track) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'Usuario no encontrado' });
     }
 
     // ACTUALIZA: Se encarga de mantener sincronizados retos y las rutas
@@ -56,6 +56,6 @@ export const deleteTrackQuery = async (req: any, res: any) => {
     await Track.findByIdAndDelete(track._id);
     return res.send(track);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el usuario', error});
   }
 };

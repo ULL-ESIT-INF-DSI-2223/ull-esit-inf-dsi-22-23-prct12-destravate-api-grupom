@@ -11,7 +11,8 @@ export const postTrack = async (req: any, res: any) => {
     const track = new Track(req.body);
     await track.save();
     return res.status(201).send(track);
+
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "No se añadió correctamente la ruta", error: error});
   }
 };

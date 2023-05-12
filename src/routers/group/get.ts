@@ -14,11 +14,11 @@ export const getGroupQuery = async (req: any, res: any) => {
     const groups = await Group.find(filter);
 
     if (groups.length !== 0) {
-      return res.send(groups);
+      return res.status(200).send(groups);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "grupo no encontrado"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al buscar un grupo", error});
   }
 };
 
@@ -36,10 +36,10 @@ export const getGroup = async (req: any, res: any) => {
     const groups = await Group.find(filter);
 
     if (groups.length !== 0) {
-      return res.send(groups);
+      return res.status(200).send(groups);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "grupo no encontrado"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al buscar un grupo", error});
   }
 };

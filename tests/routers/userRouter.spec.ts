@@ -39,7 +39,7 @@ describe('POST /users', () => {
       username: "bobesponja",
       history: {"01-01-2023": [ruta.body._id]}
     }).expect(201);
-    
+
     expect(response.body).to.include({
       name: 'Bob Esponja',
       username: 'bobesponja'
@@ -62,7 +62,7 @@ describe('POST /users', () => {
     expect(checkFirstUser).to.be.null;
   });
 
-  it('Un usuario se crea con los parámetros mínimos correctamente', async () => {
+  it('Un usuario se crea con los parámetros mínimos correctamente comprobando el array de amigos', async () => {
     const BobEsponja = await User.findOne({username: 'bobesponja'});
     let idBobEsponja = "";
     if(BobEsponja !== null) {

@@ -11,7 +11,7 @@ import { User } from '../../models/userModel.js';
  */
 export const patchChallengeQuery = async (req: any, res: any) => {
   if (!req.query.id) {
-    return res.status(400).send({ error: 'A id must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un id' });
   }
 
   try {
@@ -20,7 +20,7 @@ export const patchChallengeQuery = async (req: any, res: any) => {
     const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar" });
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
     }
 
     const challenge = await Challenge.findOneAndUpdate({ id: req.query.id }, req.body, { new: true, runValidators: true });
@@ -35,9 +35,9 @@ export const patchChallengeQuery = async (req: any, res: any) => {
     if (challenge) {
       return res.send(challenge);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "El reto no se actualizó correctamente"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});
   }
 };
 
@@ -51,13 +51,16 @@ export const patchChallengeQuery = async (req: any, res: any) => {
  * @returns Response
  */
 export const patchChallenge = async (req: any, res: any) => {
+  if (!req.params.id) {
+    return res.status(400).send({ msg: 'Se debe proporcionar un id' });
+  }
   try {
     const allowedUpdates = ["name", "tracks", "activity", "totalDistance", "users"];
     const actualUpdates = Object.keys(req.body);
     const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar" });
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
     }
 
     const challenge = await Challenge.findOneAndUpdate({ id: req.params.id }, req.body, { new: true, runValidators: true });
@@ -72,8 +75,8 @@ export const patchChallenge = async (req: any, res: any) => {
     if (challenge) {
       return res.send(challenge);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "El reto no se actualizó correctamente"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});
   }
 };

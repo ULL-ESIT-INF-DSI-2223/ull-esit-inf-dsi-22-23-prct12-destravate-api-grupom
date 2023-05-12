@@ -14,11 +14,11 @@ export const getChallenge = async (req: any, res: any) => {
     const challenges = await Challenge.find(filter);
 
     if (challenges.length !== 0) {
-      return res.send(challenges);
+      return res.status(200).send(challenges);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "reto no encontrado"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al buscar un reto", error});
   }
 };
 
@@ -36,10 +36,10 @@ export const getChallengeQuery =  async (req: any, res: any) => {
     const challenges = await Challenge.find(filter);
 
     if (challenges.length !== 0) {
-      return res.send(challenges);
+      return res.status(200).send(challenges);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "reto no encontrado"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al buscar un reto", error});
   }
 };

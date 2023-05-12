@@ -10,7 +10,7 @@ import { Track } from "../../models/trackModel.js";
  */
 export const patchTrackQuery = async (req: any, res: any) => {
   if (!req.query.id) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un id' });
   }
 
   try {
@@ -19,17 +19,18 @@ export const patchTrackQuery = async (req: any, res: any) => {
     const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar" });
-    }
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
+}
 
     const track = await Track.findOneAndUpdate({ id: req.query.id }, req.body, { new: true, runValidators: true });
 
     if (track) {
       return res.send(track);
+
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "El usuario no se actualizó correctamente"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});
   }
 };
 
@@ -42,6 +43,9 @@ export const patchTrackQuery = async (req: any, res: any) => {
  * @returns Response
  */
 export const patchTrack = async (req: any, res: any) => {
+  if (!req.params.id) {
+    return res.status(400).send({ msg: 'Se debe proporcionar un id' });
+  }
   try {
     const allowedUpdates = ["name", "startGeolocation", "endGeolocation", "distance", "unevenness", "activity", "averageRating"];
     const actualUpdates = Object.keys(req.body);
@@ -52,13 +56,12 @@ export const patchTrack = async (req: any, res: any) => {
     }
 
     const track = await Track.findOneAndUpdate({ id: req.params.id }, req.body, { new: true, runValidators: true });
-    // TODO : revisar el populate
 
     if (track) {
       return res.send(track);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "La ruta no se actualizó correctamente"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});
   }
 };

@@ -137,21 +137,9 @@ const GroupSchema = new Schema<GroupDocumentInterface>({
         }
       }
     }]
-    // TODO : comprobar que el formato de la fecha introducida es correcto
-    
-      // TODO : por alguna razon no funciona, osea acepta todo
-      // for (let keys in value.keys()) {
-      //   if (!validator.default.isDate(keys, {strictMode: true})) {
-      //     throw new Error('La key debe ser una fecha');
-      //   }
-      // }
   }
 });
 
-// GroupSchema.pre<GroupDocumentInterface>('findOneAndUpdate', async function (next) {
-  
-//   next();
-// });
 
 GroupSchema.pre('save', function(next) {  
   const contador = new Map<string, number>();

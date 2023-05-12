@@ -47,7 +47,6 @@ export const postGroup = async (req: any, res: any) => {
 
     return res.status(201).send(groupActualizado);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "No se añadió correctamente el grupo", error: error});
   }
-
 };

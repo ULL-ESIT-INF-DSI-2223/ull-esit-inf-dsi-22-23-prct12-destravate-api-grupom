@@ -14,11 +14,11 @@ export const getTrackQuery = async (req: any, res: any) => {
     const tracks = await Track.find(filter);
 
     if (tracks.length !== 0) {
-      return res.send(tracks);
+      return res.status(200).send(tracks);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "Usuario no encontrado"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al buscar un usuario", error});
   }
 };
 
@@ -36,10 +36,10 @@ export const getTrack = async (req: any, res: any) => {
     const tracks = await Track.find(filter);
 
     if (tracks.length !== 0) {
-      return res.send(tracks);
+      return res.status(200).send(tracks);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "Usuario no encontrado"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al buscar un usuario", error});
   }
 };

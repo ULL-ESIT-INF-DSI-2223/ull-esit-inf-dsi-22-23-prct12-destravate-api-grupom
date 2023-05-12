@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.05% </span>
+                <span class="strong">81.13% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>128/156</span>
+                <span class='fraction'>129/159</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.63% </span>
+                <span class="strong">86.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>39/44</span>
+                <span class='fraction'>39/45</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.05% </span>
+                <span class="strong">81.13% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>128/156</span>
+                <span class='fraction'>129/159</span>
             </div>
         
             
@@ -219,7 +219,10 @@
 <a name='L154'></a><a href='#L154'>154</a>
 <a name='L155'></a><a href='#L155'>155</a>
 <a name='L156'></a><a href='#L156'>156</a>
-<a name='L157'></a><a href='#L157'>157</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -311,6 +314,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -390,7 +396,7 @@ import { Track } from "../../models/trackModel.js";
  */
 export const patchGroupQuery = async (req: any, res: any) =&gt; {
   if (!req.query.id) {
-    return res.status(400).send({ error: 'A groupname must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un id' });
   }
   try {
     const allowedUpdates = ["name", "groupHistoricalTracks", "participants"];
@@ -398,7 +404,7 @@ export const patchGroupQuery = async (req: any, res: any) =&gt; {
     const isValidUpdate = actualUpdates.every((update) =&gt; allowedUpdates.includes(update));
 &nbsp;
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar" });
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
     }
 &nbsp;
     // Grupo antes de ser modificado
@@ -452,9 +458,9 @@ export const patchGroupQuery = async (req: any, res: any) =&gt; {
     if (groupActualizado) {
       return res.send(groupActualizado);
     }
-    return res.status(404).send('No se ha encontrado el grupo');
+    return res.status(404).send({msg: "El grupo no se actualizó correctamente"});
   } <span class="branch-0 cbranch-no" title="branch not covered" >catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(500).send(error);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 };
 &nbsp;
@@ -467,6 +473,9 @@ export const patchGroupQuery = async (req: any, res: any) =&gt; {
  * @returns Response
  */
 export const patchGroup = async (req: any, res: any) =&gt; {
+  if (!req.params.id) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(400).send({ msg: 'Se debe proporcionar un id' });</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
   try {
     const allowedUpdates = ["name", "groupHistoricalTracks", "participants"];
     const actualUpdates = Object.keys(req.body);
@@ -526,9 +535,9 @@ export const patchGroup = async (req: any, res: any) =&gt; {
     if (groupActualizado) {
       return res.send(groupActualizado);
     }
-    return res.status(404).send('No se ha encontrado el grupo');
+    return res.status(404).send({msg: "El grupo no se actualizó correctamente"});
   } <span class="branch-0 cbranch-no" title="branch not covered" >catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(500).send(error);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -538,7 +547,7 @@ export const patchGroup = async (req: any, res: any) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-05-12T17:29:53.603Z
+                at 2023-05-12T18:50:28.837Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

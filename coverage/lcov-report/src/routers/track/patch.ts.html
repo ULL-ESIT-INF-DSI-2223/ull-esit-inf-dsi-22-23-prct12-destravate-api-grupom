@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.75% </span>
+                <span class="strong">91.04% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>60/64</span>
+                <span class='fraction'>61/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/14</span>
+                <span class='fraction'>12/15</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.75% </span>
+                <span class="strong">91.04% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>60/64</span>
+                <span class='fraction'>61/67</span>
             </div>
         
             
@@ -126,7 +126,10 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -153,6 +156,7 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -171,6 +175,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -178,7 +185,6 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -201,7 +207,7 @@
  */
 export const patchTrackQuery = async (req: any, res: any) =&gt; {
   if (!req.query.id) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un id' });
   }
 &nbsp;
   try {
@@ -210,17 +216,18 @@ export const patchTrackQuery = async (req: any, res: any) =&gt; {
     const isValidUpdate = actualUpdates.every((update) =&gt; allowedUpdates.includes(update));
 &nbsp;
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar" });
-    }
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
+}
 &nbsp;
     const track = await Track.findOneAndUpdate({ id: req.query.id }, req.body, { new: true, runValidators: true });
 &nbsp;
     if (track) {
       return res.send(track);
+&nbsp;
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "El usuario no se actualizó correctamente"});
   } <span class="branch-0 cbranch-no" title="branch not covered" >catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(500).send(error);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 };
 &nbsp;
@@ -233,6 +240,9 @@ export const patchTrackQuery = async (req: any, res: any) =&gt; {
  * @returns Response
  */
 export const patchTrack = async (req: any, res: any) =&gt; {
+  if (!req.params.id) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(400).send({ msg: 'Se debe proporcionar un id' });</span>
+<span class="cstat-no" title="statement not covered" >  }</span>
   try {
     const allowedUpdates = ["name", "startGeolocation", "endGeolocation", "distance", "unevenness", "activity", "averageRating"];
     const actualUpdates = Object.keys(req.body);
@@ -243,14 +253,13 @@ export const patchTrack = async (req: any, res: any) =&gt; {
     }
 &nbsp;
     const track = await Track.findOneAndUpdate({ id: req.params.id }, req.body, { new: true, runValidators: true });
-    // TODO : revisar el populate
 &nbsp;
     if (track) {
       return res.send(track);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "La ruta no se actualizó correctamente"});
   } <span class="branch-0 cbranch-no" title="branch not covered" >catch (error) {</span>
-<span class="cstat-no" title="statement not covered" >    return res.status(500).send(error);</span>
+<span class="cstat-no" title="statement not covered" >    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
 };</pre></td></tr></table></pre>
 
@@ -259,7 +268,7 @@ export const patchTrack = async (req: any, res: any) =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-05-12T17:29:53.603Z
+                at 2023-05-12T18:50:28.837Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -11,15 +11,14 @@ import { User } from "../../models/userModel.js";
  */
 export const deleteUserQuery =  async (req: any, res: any) => {
   if (!req.query.username) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });
   }
    try {
     const user = await User.findOne({username: req.query.username.toString()});
      if (!user) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'Usuario no encontrado' });
     }
 
-    // TODO : darse cuenta del borrado en cascada
     await User.updateMany( { friends: user._id }, { $pull: { friends: user._id }});
 
      // ACTUALIZA: Se encarga de mantener sincronizados los ususarios con los grupos y los grupos con los usuarios
@@ -31,7 +30,7 @@ export const deleteUserQuery =  async (req: any, res: any) => {
     await User.findByIdAndDelete(user._id);
     return res.send(user);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el usuario', error});
   }
 };
   
@@ -44,17 +43,16 @@ export const deleteUserQuery =  async (req: any, res: any) => {
  */
 export const deleteUser =  async (req: any, res: any) => {
   if (!req.params.username) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });
   }
 
   try {
     const user = await User.findOne({username: req.params.username.toString()});
 
     if (!user) {
-      return res.status(404).send();
+      return res.status(404).send({ msg: 'Usuario no encontrado' });
     }
 
-    // TODO : darse cuenta del borrado en cascada
     await User.updateMany( { friends: user._id }, { $pull: { friends: user._id }});
 
     // ACTUALIZA: Se encarga de mantener sincronizados los ususarios con los grupos y los grupos con los usuarios
@@ -66,7 +64,7 @@ export const deleteUser =  async (req: any, res: any) => {
     await User.findByIdAndDelete(user._id);
     return res.send(user);
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({ msg: 'Fallo en el servidor al eliminar el usuario', error});
   }
 };
   

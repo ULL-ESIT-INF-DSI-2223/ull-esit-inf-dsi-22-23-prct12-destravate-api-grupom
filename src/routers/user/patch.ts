@@ -13,7 +13,7 @@ import { Stats } from "../../../src/types/type.js"
  */
 export const patchUserQuery =  async (req: any, res: any) => {
   if (!req.query.username) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });
   }
 
   try {
@@ -22,7 +22,7 @@ export const patchUserQuery =  async (req: any, res: any) => {
     const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar"});
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
     }
 
     // Usuario antes de ser modificado
@@ -55,7 +55,6 @@ export const patchUserQuery =  async (req: any, res: any) => {
       }
     }
 
-    // TODO : encerrar esto en una función
     // ACTUALIZA: Se encarga de mantener sincronizados los ususarios de rutas, con las rutas de usuarios
     if (user && user.history !== undefined) {
       const values = [...new Set([...(user.history.values())].flat())];
@@ -101,13 +100,12 @@ export const patchUserQuery =  async (req: any, res: any) => {
     
     const userActualizado = await User.findOne({username: req.query.username});
 
-    // TODO : revisar el populate
     if (userActualizado) {
       return res.send(userActualizado);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "El usuario no se actualizó correctamente"});
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});
   }
 };
 
@@ -121,7 +119,7 @@ export const patchUserQuery =  async (req: any, res: any) => {
  */
 export const patchUser = async (req: any, res: any) => {
   if (!req.params.username) {
-    return res.status(400).send({ error: 'A username must be provided' });
+    return res.status(400).send({ msg: 'Se debe proporcionar un nombre de usuario' });
   }
   try {
     const allowedUpdates = ["name", "activity", "friends", "friendsGroups", "history"];
@@ -129,7 +127,7 @@ export const patchUser = async (req: any, res: any) => {
     const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidUpdate) {
-      return res.status(400).send({ error: "Los parámetros seleccionados no se puede modificar"});
+      return res.status(400).send({ msg: "Los parámetros seleccionados no se puede modificar"});
     }
 
     // Usuario antes de ser modificado
@@ -162,7 +160,6 @@ export const patchUser = async (req: any, res: any) => {
       }
     }
 
-    // TODO : encerrar esto en una función
     // ACTUALIZA: Se encarga de mantener sincronizados los ususarios de rutas, con las rutas de usuarios
     if (user && user.history !== undefined) {
       const values = [...new Set([...(user.history.values())].flat())];
@@ -207,13 +204,12 @@ export const patchUser = async (req: any, res: any) => {
       
     const userActualizado = await User.findOne({username: req.params.username});
 
-
-    // TODO : revisar el populate
     if (userActualizado) {
       return res.send(userActualizado);
     }
-    return res.status(404).send();
+    return res.status(404).send({msg: "El usuario no se actualizó correctamente"});
+
   } catch (error) {
-    return res.status(500).send(error);
+    return res.status(500).send({msg: "Fallo en el servidor al actualizar", error});
   }
 };
