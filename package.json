@@ -5,13 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "tsc-watch --onSuccess \"node dist/index.js\"",
-    "server": "tsc-watch --onSuccess \"env-cmd -f ./config/dev.env node dist/server.js\"",
+    "server": "tsc-watch --onSuccess \"env-cmd -f ./config/dev.env node dist/index.js\"",
     "mongoose": "tsc-watch --onSuccess \"env-cmd -f ./config/dev.env dist/db/mongoose.js\"",
     "tsx": "tsc --outDir dist",
     "doc": "typedoc",
     "test": "env-cmd -f ./config/test.env mocha --exit",
-    "coverage": "c8 npm test && c8 report --reporter=lcov"
+    "coverage": "c8 npm test && c8 report --reporter=lcov",
+    "build": "tsc",
+    "start": "node dist/index.js"
   },
   "keywords": [],
   "author": "",
