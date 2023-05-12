@@ -9,7 +9,7 @@ export interface GroupDocumentInterface extends Document {
   name: string;
   participants?:  Schema.Types.ObjectId[];
   groupTrainingStats?: Stats;
-  groupRanking: Schema.Types.ObjectId[];
+  groupRanking?: Schema.Types.ObjectId[];
   groupFavoriteTracks?: Schema.Types.ObjectId[];
   groupHistoricalTracks?: Map<string, Schema.Types.ObjectId[]>;
 }

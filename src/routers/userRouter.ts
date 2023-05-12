@@ -9,8 +9,8 @@ export const userRouter = express.Router();
 
 userRouter.post("/users", postUser)
 userRouter.get("/users", getUserQuery)
-userRouter.get("/users/:id", getUser)
+userRouter.get("/users/:username", getUser)
 userRouter.patch("/users", patchUserQuery)
 userRouter.patch("/users/:username", patchUser)
 userRouter.delete("/users", deleteUserQuery)
-userRouter.delete("/users/:id", deleteUser)
+userRouter.delete("/users/:username", deleteUser)

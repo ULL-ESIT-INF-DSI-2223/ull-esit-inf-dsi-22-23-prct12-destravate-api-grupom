@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.46% </span>
+                <span class="strong">70.73% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/41</span>
+                <span class='fraction'>29/41</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
+                <span class='fraction'>3/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.46% </span>
+                <span class="strong">70.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/41</span>
+                <span class='fraction'>29/41</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -113,6 +113,23 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -121,29 +138,12 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Schema } from "mongoose";
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span></td><td class="text"><pre class="prettyprint lang-js">import { Schema } from "mongoose";
 import { Group } from "../models/groupModel.js";
 import { User } from "../models/userModel.js";
 import { Challenge } from "../models/challengeModel.js";
@@ -152,21 +152,21 @@ import { Track } from "../models/trackModel.js";
 &nbsp;
 &nbsp;
 &nbsp;
-export const UsersExist = <span class="fstat-no" title="function not covered" >async (id: Schema.Types.ObjectId) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const users = await User.findOne({ _id: id });</span>
-<span class="cstat-no" title="statement not covered" >  if (users === null) {</span>
+export const UsersExist = async (id: Schema.Types.ObjectId) =&gt; {
+  const users = await User.findOne({ _id: id });
+  if (users === null) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
 <span class="cstat-no" title="statement not covered" >    throw new Error('No existe ningún usuario con ese id');</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  return true;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+  return true;
+}
 &nbsp;
-export const GroupsExist = <span class="fstat-no" title="function not covered" >async (id: Schema.Types.ObjectId) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const groups = await Group.findOne({ _id: id });</span>
-<span class="cstat-no" title="statement not covered" >  if (groups === null) {</span>
+export const GroupsExist = async (id: Schema.Types.ObjectId) =&gt; {
+  const groups = await Group.findOne({ _id: id });
+  if (groups === null) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
 <span class="cstat-no" title="statement not covered" >    throw new Error('No existe ningún grupo con ese id');</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  return true;</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+  return true;
+}
 &nbsp;
 &nbsp;
 export const ChallengesExist = <span class="fstat-no" title="function not covered" >async (id: Schema.Types.ObjectId) =&gt; {</span>
@@ -177,20 +177,20 @@ export const ChallengesExist = <span class="fstat-no" title="function not covere
 <span class="cstat-no" title="statement not covered" >  return true;</span>
 <span class="cstat-no" title="statement not covered" >}</span>
   
-export const TracksExist = <span class="fstat-no" title="function not covered" >async (id: Schema.Types.ObjectId) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const tracks = await Track.findOne({ _id: id });</span>
-<span class="cstat-no" title="statement not covered" >  if (tracks === null) {</span>
+export const TracksExist = async (id: Schema.Types.ObjectId) =&gt; {
+  const tracks = await Track.findOne({ _id: id });
+  if (tracks === null) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
 <span class="cstat-no" title="statement not covered" >    throw new Error('No existe ninguna ruta con ese id');</span>
 <span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  return true;</span>
-<span class="cstat-no" title="statement not covered" >}</span></pre></td></tr></table></pre>
+  return true;
+}</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-05-12T07:00:18.394Z
+                at 2023-05-12T13:16:10.036Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

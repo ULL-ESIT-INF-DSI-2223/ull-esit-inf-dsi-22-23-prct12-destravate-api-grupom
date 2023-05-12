@@ -105,6 +105,9 @@ export const patchUserQuery =  async (req: any, res: any) => {
 };
 
 export const patchUser = async (req: any, res: any) => {
+  if (!req.params.username) {
+    return res.status(400).send({ error: 'A username must be provided' });
+  }
   try {
     const allowedUpdates = ["name", "activity", "friends", "friendsGroups", "history"];
     const actualUpdates = Object.keys(req.body);
@@ -187,7 +190,7 @@ export const patchUser = async (req: any, res: any) => {
       await User.findByIdAndUpdate(user._id , { trainingStats: estadisticas });
     }
       
-    const userActualizado = await User.findOne({username: req.query.username});
+    const userActualizado = await User.findOne({username: req.params.username});
 
 
     // TODO : revisar el populate
