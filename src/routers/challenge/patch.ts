@@ -1,4 +1,5 @@
 import { Challenge } from '../../models/challengeModel.js';
+import { User } from '../../models/userModel.js';
 
 
 export const patchChallengeQuery = async (req: any, res: any) => {
@@ -17,7 +18,13 @@ export const patchChallengeQuery = async (req: any, res: any) => {
 
     const challenge = await Challenge.findOneAndUpdate({ id: req.query.id }, req.body, { new: true, runValidators: true });
 
-    // TODO : revisar el populate
+    // Actualiza el vector de favoriteChallenges en el usuario cada vez que se agrega un usuario a un reto
+    if (challenge && challenge.users !== undefined) {
+      for(let i = 0; i < challenge.users.length; i++) {
+        await User.findOneAndUpdate({ _id: challenge.users[i] }, { $addToSet: { favoriteChallenges: challenge._id } })
+      }
+    }
+    
     if (challenge) {
       return res.send(challenge);
     }
@@ -42,7 +49,13 @@ export const patchChallenge = async (req: any, res: any) => {
 
     const challenge = await Challenge.findOneAndUpdate({ id: req.params.id }, req.body, { new: true, runValidators: true });
 
-    // TODO : revisar el populate
+    // Actualiza el vector de favoriteChallenges en el usuario cada vez que se agrega un usuario a un reto
+    if (challenge && challenge.users !== undefined) {
+      for(let i = 0; i < challenge.users.length; i++) {
+        await User.findOneAndUpdate({ _id: challenge.users[i] }, { $addToSet: { favoriteChallenges: challenge._id } })
+      }
+    }
+
     if (challenge) {
       return res.send(challenge);
     }

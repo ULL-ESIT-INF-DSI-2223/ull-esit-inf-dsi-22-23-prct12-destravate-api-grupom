@@ -4,6 +4,7 @@ export const getUserQuery =  async (req: any, res: any) => {
   try {
     const filter = req.query.username ? {username: req.query.username.toString()} : {};
 
+
     const users = await User.find(filter);
 
     if (users.length !== 0) {

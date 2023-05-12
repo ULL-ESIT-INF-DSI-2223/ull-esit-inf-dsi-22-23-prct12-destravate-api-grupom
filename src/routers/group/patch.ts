@@ -1,5 +1,7 @@
 import { Group } from "../../models/groupModel.js";
 import { User } from "../../models/userModel.js";
+import { Stats } from "../../../src/types/type.js"
+import { Track } from "../../models/trackModel.js";
 
 
 export const patchGroupQuery = async (req: any, res: any) => {
@@ -41,13 +43,35 @@ export const patchGroupQuery = async (req: any, res: any) => {
       }
     }
   
+ 
+    // ACTUALIZA: las estadísticas del usuario
+    let estadisticas: Stats = [[0,0],[0,0],[0,0]]
+    if (group && group.groupHistoricalTracks !== undefined) {
+      const rutas = Array.from(group.groupHistoricalTracks.values()).flat();
+
+      for(let i = 0; i < rutas.length; i++) {
+        const ruta = await Track.findById(rutas[i]);
+        if(ruta !== null) {
+          estadisticas[0][0] += ruta.unevenness;
+          estadisticas[0][1] += ruta.distance;
+          estadisticas[1][0] += ruta.unevenness;
+          estadisticas[1][1] += ruta.distance;
+          estadisticas[2][0] += ruta.unevenness;
+          estadisticas[2][1] += ruta.distance;
+        }
+      }
+      await Group.findByIdAndUpdate(group._id , { groupTrainingStats: estadisticas });
+    }
+
+    const groupActualizado = await Group.findOne({id: req.query.id});
+
 
 
     // TODO : revisar el populate
-    if (group) {
-      return res.send(group);
+    if (groupActualizado) {
+      return res.send(groupActualizado);
     }
-    return res.status(404).send();
+    return res.status(404).send('No se ha encontrado el grupo');
   } catch (error) {
     return res.status(500).send(error);
   }
@@ -92,12 +116,33 @@ export const patchGroup = async (req: any, res: any) => {
     }
   
 
+    // ACTUALIZA: las estadísticas del usuario
+    let estadisticas: Stats = [[0,0],[0,0],[0,0]]
+    if (group && group.groupHistoricalTracks !== undefined) {
+      const rutas = Array.from(group.groupHistoricalTracks.values()).flat();
+
+      for(let i = 0; i < rutas.length; i++) {
+        const ruta = await Track.findById(rutas[i]);
+        if(ruta !== null) {
+          estadisticas[0][0] += ruta.unevenness;
+          estadisticas[0][1] += ruta.distance;
+          estadisticas[1][0] += ruta.unevenness;
+          estadisticas[1][1] += ruta.distance;
+          estadisticas[2][0] += ruta.unevenness;
+          estadisticas[2][1] += ruta.distance;
+        }
+      }
+      await Group.findByIdAndUpdate(group._id , { groupTrainingStats: estadisticas });
+    }
+
+    const groupActualizado = await Group.findOne({id: req.params.id});
+
 
     // TODO : revisar el populate
-    if (group) {
-      return res.send(group);
+    if (groupActualizado) {
+      return res.send(groupActualizado);
     }
-    return res.status(404).send();
+    return res.status(404).send('No se ha encontrado el grupo');
   } catch (error) {
     return res.status(500).send(error);
   }

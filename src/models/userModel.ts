@@ -1,8 +1,7 @@
 import { Document, Schema, model } from 'mongoose';
-import { UserStats } from '../types/type.js';
+import { Stats } from '../types/type.js';
 import validator from 'validator';
 import { UsersExist, GroupsExist, TracksExist, ChallengesExist } from '../tools/tools.js';
-import { Challenge } from './challengeModel.js';
 
 
 
@@ -12,11 +11,10 @@ export interface UserDocumentInterface extends Document {
   activity: 'Correr' | 'Bicicleta';
   friends?: Schema.Types.ObjectId[];
   friendsGroups?: Schema.Types.ObjectId[];
-  trainingStats?: UserStats;
+  trainingStats?: Stats;
   favoriteTracks?: Schema.Types.ObjectId[];
   favoriteChallenges?: Schema.Types.ObjectId[];
   history?: Map<string, Schema.Types.ObjectId[]>;
-  prueba: string;
 }
 
 
@@ -67,7 +65,7 @@ const UserSchema = new Schema<UserDocumentInterface>({
     type: [[Number]],
     default: [ [0, 0], [0, 0], [0, 0] ],
     // validar que solo se ingresan 3 arrays y que para cada array solo se ingresan dos numeros
-    validate: (value: UserStats) => {
+    validate: (value: Stats) => {
       if (value.length !== 3) {
         throw new Error('El array debe tener 3 arrays');
       } else if (value.every((array) => array.length !== 2)) {
@@ -86,8 +84,8 @@ const UserSchema = new Schema<UserDocumentInterface>({
   },
   favoriteChallenges: {
     type: [Schema.Types.ObjectId],
-    default: [],
     ref: 'Challenge',
+    default: [],
     validate: async (value: Schema.Types.ObjectId[]) => {
       for (const id of value) {
         await ChallengesExist(id);
@@ -104,12 +102,17 @@ const UserSchema = new Schema<UserDocumentInterface>({
     // TODO : comprobar que el formato de la fecha introducida es correcto
     validate: [{
       validator: async (value: Map<string, Schema.Types.ObjectId[]>) => {
-        for (let key in value.keys()) {
-          if(!validator.default.isDate(key)) {
+        const regex = /^\d{2}-\d{2}-\d{4}$/;
+        for (let key of value.keys()) {
+          if (!regex.test(key)) {
             throw new Error('El formato de la fecha no es correcto');
+          } else if (Number(key.split('-')[0]) < 1 || Number(key.split('-')[0]) > 31) {
+            throw new Error('El dia introducido no es correcto');
+          } else if (Number(key.split('-')[1]) < 1 || Number(key.split('-')[1]) > 12) {
+            throw new Error('El mes introducido no es correcto');
           }
         }
-      }, 
+      }
     },
     {
       validator: async (mapa: Map<string, Schema.Types.ObjectId[]>) => {
@@ -124,7 +127,7 @@ const UserSchema = new Schema<UserDocumentInterface>({
 
 });
 
-UserSchema.pre('save', function(next) {
+UserSchema.pre('save', function(next) {  
   const contador = new Map<string, number>();
   if (this.history !== undefined) {
     this.history.forEach((value) => {
@@ -144,13 +147,10 @@ UserSchema.pre('save', function(next) {
   for (const key of ordenado.keys()) {
     this.favoriteTracks?.push((key as unknown) as Schema.Types.ObjectId);
   }
-  Challenge.find({users: this._id }).then((challenges) => {
-    for (const challenge of challenges) {
-      this.favoriteChallenges?.push(challenge._id);
-    }
-  });
   next();
 });
+
+
 
 
 export const User = model<UserDocumentInterface>('User', UserSchema);

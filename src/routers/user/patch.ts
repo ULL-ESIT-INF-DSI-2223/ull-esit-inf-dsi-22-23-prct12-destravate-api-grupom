@@ -1,6 +1,7 @@
 import { Group } from "../../models/groupModel.js";
 import { Track } from "../../models/trackModel.js";
 import { User } from "../../models/userModel.js";
+import { Stats } from "../../../src/types/type.js"
 
 
 export const patchUserQuery =  async (req: any, res: any) => {
@@ -9,7 +10,7 @@ export const patchUserQuery =  async (req: any, res: any) => {
   }
 
   try {
-    const allowedUpdates = ["name", "activity", "friends", "friendsGroups", "trainingStats", "favoriteTracks", "favoriteChallenges", "history"];
+    const allowedUpdates = ["name", "activity", "friends", "friendsGroups", "history"];
     const actualUpdates = Object.keys(req.body);
     const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
 
@@ -71,10 +72,31 @@ export const patchUserQuery =  async (req: any, res: any) => {
     }
 
 
+    // ACTUALIZA: las estadísticas del usuario
+    let estadisticas: Stats = [[0,0],[0,0],[0,0]]
+    if (user && user.history !== undefined) {
+      const rutas = Array.from(user.history.values()).flat();
+      for(let i = 0; i < rutas.length; i++) {
+        const ruta = await Track.findById(rutas[i]);
+        if(ruta !== null) {
+          estadisticas[0][0] += ruta.unevenness;
+          estadisticas[0][1] += ruta.distance;
+          estadisticas[1][0] += ruta.unevenness;
+          estadisticas[1][1] += ruta.distance;
+          estadisticas[2][0] += ruta.unevenness;
+          estadisticas[2][1] += ruta.distance;
+        }
+      }
+      await User.findByIdAndUpdate(user._id , { trainingStats: estadisticas });
+    }
+    
+
+    
+    const userActualizado = await User.findOne({username: req.query.username});
 
     // TODO : revisar el populate
-    if (user) {
-      return res.send(user);
+    if (userActualizado) {
+      return res.send(userActualizado);
     }
     return res.status(404).send();
   } catch (error) {
@@ -84,7 +106,7 @@ export const patchUserQuery =  async (req: any, res: any) => {
 
 export const patchUser = async (req: any, res: any) => {
   try {
-    const allowedUpdates = ["name", "activity", "friends", "friendsGroups", "trainingStats", "favoriteTracks", "favoriteChallenges", "history"];
+    const allowedUpdates = ["name", "activity", "friends", "friendsGroups", "history"];
     const actualUpdates = Object.keys(req.body);
     const isValidUpdate = actualUpdates.every((update) => allowedUpdates.includes(update));
 
@@ -147,9 +169,30 @@ export const patchUser = async (req: any, res: any) => {
 
 
 
+    // ACTUALIZA: las estadísticas del usuario
+    let estadisticas: Stats = [[0,0],[0,0],[0,0]]
+    if (user && user.history !== undefined) {
+      const rutas = Array.from(user.history.values()).flat();
+      for(let i = 0; i < rutas.length; i++) {
+        const ruta = await Track.findById(rutas[i]);
+        if(ruta !== null) {
+          estadisticas[0][0] += ruta.unevenness;
+          estadisticas[0][1] += ruta.distance;
+          estadisticas[1][0] += ruta.unevenness;
+          estadisticas[1][1] += ruta.distance;
+          estadisticas[2][0] += ruta.unevenness;
+          estadisticas[2][1] += ruta.distance;
+        }
+      }
+      await User.findByIdAndUpdate(user._id , { trainingStats: estadisticas });
+    }
+      
+    const userActualizado = await User.findOne({username: req.query.username});
+
+
     // TODO : revisar el populate
-    if (user) {
-      return res.send(user);
+    if (userActualizado) {
+      return res.send(userActualizado);
     }
     return res.status(404).send();
   } catch (error) {

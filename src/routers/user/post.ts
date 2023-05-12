@@ -1,6 +1,7 @@
 import { Group } from "../../models/groupModel.js";
 import { Track } from "../../models/trackModel.js";
 import { User } from "../../models/userModel.js";
+import { Stats } from "../../../src/types/type.js"
 
 export const postUser = async (req: any, res: any) => {
   try {
@@ -28,10 +29,29 @@ export const postUser = async (req: any, res: any) => {
         await User.findOneAndUpdate({ _id: user.friends[i] }, { $addToSet: { friends: user._id }});
       }
     }
-
-
     await user.save();
-    return res.status(201).send(user);
+
+    // ACTUALIZA: las estadísticas del usuario
+    let estadisticas: Stats = [[0,0],[0,0],[0,0]]
+    if (user.history !== undefined) {
+      const rutas = Array.from(user.history.values()).flat();
+      for(let i = 0; i < rutas.length; i++) {
+        const ruta = await Track.findById(rutas[i]);
+        if(ruta !== null) {
+          estadisticas[0][0] += ruta.unevenness;
+          estadisticas[0][1] += ruta.distance;
+          estadisticas[1][0] += ruta.unevenness;
+          estadisticas[1][1] += ruta.distance;
+          estadisticas[2][0] += ruta.unevenness;
+          estadisticas[2][1] += ruta.distance;
+        }
+      }
+    }
+    
+    await User.findByIdAndUpdate(user._id , { trainingStats: estadisticas });
+    const userActualizado = await User.findById(user._id);
+
+    return res.status(201).send(userActualizado);
   } catch (error) {
     return res.status(500).send({msg: "No se añadió correctamente el usuario", error: error});
   }

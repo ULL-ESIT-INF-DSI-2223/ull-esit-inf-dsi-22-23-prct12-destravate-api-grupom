@@ -1,32 +1,27 @@
 import request from 'supertest';
 import { app } from '../../src/app.js';
+import { User } from '../../src/models/userModel.js';
 
-describe('POST /users', () => {
-  it('Debería crear un usuario satisfactoriamente', async () => {
-    await request(app).post('/users').send({
-      name: "Eduardo Segredo",
-      username: "esegredo"
-    }).expect(201);
-  });
+const firstUser = {
+  name: "Eduardo Segredo",
+  username: "esegredo"
+}
 
-  it('No debería crear un usuario satisfactoriamente', async () => {
-    await request(app).post('/users').send({
-      name: "Eduardo Segredo"
-    }).expect(500);
-  });
+beforeEach(async () => {
+  await User.deleteMany();
+  await new User(firstUser).save();
 });
 
-// describe('DELETE /users', () => {
-//   it('Debería eliminar un usuario satisfactoriamente', async () => {
-//     await request(app).delete('/users').send({
-//       name: "Eduardo Segredo",
-//       username: "esegredo"
-//     }).expect(201);
-//   });
-
-//   it('No debería eliminar un usuario satisfactoriamente, si no existe', async () => {
-//     await request(app).delete('/users').send({
-//       name: "Eduardo Segredo"
-//     }).expect(500);
-//   });
+// after(async () => {
+//   await User.deleteMany();
 // });
+
+describe('GET /users', () => {
+  it('Should get a user by username', async () => {
+    await request(app).get('/users?username=esegredo').expect(200);
+  });
+
+  it('Should not find a user by username', async () => {
+    await request(app).get('/users?username=edusegre').expect(404);
+  });
+});

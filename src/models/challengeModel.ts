@@ -1,7 +1,7 @@
 import { Document, Schema, model } from "mongoose";
 import validator from "validator";
 import { UsersExist, TracksExist } from '../tools/tools.js';
-
+import { User } from './userModel.js';
 
 export interface ChallengeDocumentInterface extends Document {
   id: number;
@@ -52,8 +52,8 @@ const ChallengeSchema = new Schema<ChallengeDocumentInterface>({
   },
   users: {
     type: [Schema.Types.ObjectId],
-    default: [],
     ref: "User",
+    default: [],
     validate: async (value: Schema.Types.ObjectId[]) => {
       for (const id of value) {
         await UsersExist(id);
@@ -61,5 +61,30 @@ const ChallengeSchema = new Schema<ChallengeDocumentInterface>({
     }
   },
 });
+
+// ChallengeSchema.pre('save', function(next) {
+//   if (this.users !== undefined) {
+//     for(let i = 0; i < this.users.length; ++i) {
+//       // const hola1 = User.findById(this.users[i])
+//       // console.log(hola1)
+//       User.findOneAndUpdate({ _id: this.users[i] }, { $addToSet: { favoriteChallenges: this._id } })
+//       const hola = User.findById(this.users[i])
+//       const a = new User(hola)
+//       console.log(a.username)
+
+//       console.log(a.favoriteChallenges)
+//     }
+//   }
+
+//   // User.find({users: this._id }).then((challenges) => {
+//   //   for (const challenge of challenges) {
+//   //     this.favoriteChallenges?.push(challenge._id);
+//   //   }
+//   // });
+//   next()
+// });
+
+
+
 
 export const Challenge = model<ChallengeDocumentInterface>("Challenge", ChallengeSchema);

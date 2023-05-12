@@ -1,5 +1,5 @@
 import { Document, Schema, model } from 'mongoose';
-import { UserStats } from '../types/type.js';
+import { Stats } from '../types/type.js';
 import validator from 'validator';
 import { UsersExist, TracksExist } from '../tools/tools.js';
 
@@ -8,7 +8,7 @@ export interface GroupDocumentInterface extends Document {
   id: number;
   name: string;
   participants?:  Schema.Types.ObjectId[];
-  groupTrainingStats?: UserStats;
+  groupTrainingStats?: Stats;
   groupRanking: Schema.Types.ObjectId[];
   groupFavoriteTracks?: Schema.Types.ObjectId[];
   groupHistoricalTracks?: Map<string, Schema.Types.ObjectId[]>;
@@ -19,6 +19,7 @@ const GroupSchema = new Schema<GroupDocumentInterface>({
   id: {
     type: Number,
     required: true,
+    unique: true,
     trim: true
   },
   name: {
@@ -47,7 +48,7 @@ const GroupSchema = new Schema<GroupDocumentInterface>({
     type: [[Number]],
     default: [ [0, 0], [0, 0], [0, 0] ],
     // validar que solo se ingresan 3 arrays y que para cada array solo se ingresan dos numeros
-    validate: (value: UserStats) => {
+    validate: (value: Stats) => {
       if (value.length !== 3) {
         throw new Error('El array debe tener 3 arrays');
       } else if (value.every((array) => array.length !== 2)) {
@@ -57,8 +58,10 @@ const GroupSchema = new Schema<GroupDocumentInterface>({
   },
   groupRanking: {
     type: [Schema.Types.ObjectId],
-    required: true,
     ref: 'User',
+    get: function () {
+      return [...this.participants];
+    },
     validate: async (value: Schema.Types.ObjectId[]) => {
       for (const id of value) {
         await UsersExist(id);
@@ -115,6 +118,35 @@ const GroupSchema = new Schema<GroupDocumentInterface>({
       // }
   }
 });
+
+// GroupSchema.pre<GroupDocumentInterface>('findOneAndUpdate', async function (next) {
+  
+//   next();
+// });
+
+GroupSchema.pre('save', function(next) {  
+  const contador = new Map<string, number>();
+  if (this.groupHistoricalTracks !== undefined) {
+    this.groupHistoricalTracks.forEach((value) => {
+      for (let i = 0; i < value.length; i++) {
+        if (contador.has(value[i].toString()) && contador.get(value[i].toString()) !== undefined) {
+          const actual = contador.get(value[i].toString());
+          if (actual !== undefined) {
+            contador.set(value[i].toString(), actual + 1);
+          }
+        } else {
+          contador.set(value[i].toString(), 1);
+        }
+      } 
+    });
+  }
+  const ordenado = new Map([...contador.entries()].sort((a, b) => b[1] - a[1]));
+  for (const key of ordenado.keys()) {
+    this.groupFavoriteTracks?.push((key as unknown) as Schema.Types.ObjectId);
+  }
+  next();
+});
+
 
 
 export const Group = model<GroupDocumentInterface>('Group', GroupSchema);
